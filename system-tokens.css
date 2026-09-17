@@ -1,0 +1,201 @@
+/* ==========================================================================
+   Swiss Systems Lab Design Tokens & Component Primitives (sys-*)
+   Author: Dandi (TobeALeg)
+   ========================================================================== */
+
+:root {
+  /* --- 1. Surface Tokens --- */
+  --sys-ground: #0d0f12;           /* 主画布背景底色 */
+  --sys-panel: #13161c;            /* 面板/卡片表面色 */
+  --sys-panel-subtle: #191c24;     /* 二级嵌套容器底色 */
+  --sys-panel-active: #20242e;     /* 悬停与激活底色 */
+
+  /* --- 2. Border & Divider Tokens --- */
+  --sys-border: #1e2229;           /* 基础极细边框 (1px) */
+  --sys-border-strong: #2e3440;    /* 强调边框与输入框 */
+  --sys-border-dashed: #3a4252;    /* 虚线插槽/待定执行器边框 */
+
+  /* --- 3. Typography Color Tokens --- */
+  --sys-text-primary: #ffffff;     /* 主标题与极度重点 (Pure White) */
+  --sys-text-body: #e1e4ea;        /* 正文字符 (High-contrast Off-White) */
+  --sys-text-secondary: #9da4b0;   /* 二级说明文字 (Slate Gray) */
+  --sys-text-muted: #5e6573;       /* 元数据、标签前缀、静音注释 */
+
+  /* --- 4. System Accent Tokens --- */
+  --sys-amber: #f59e0b;            /* 系统核心指示色 (Amber 500) */
+  --sys-amber-soft: rgba(245, 158, 11, 0.12); /* 琥珀高亮淡背景 */
+  --sys-amber-border: rgba(245, 158, 11, 0.35); /* 琥珀微光边框 */
+  --sys-emerald: #10b981;          /* 状态正常/在线指示绿 */
+  
+  /* --- 5. Metrics & Rules --- */
+  --sys-radius: 2px;               /* 严格统一 2px 极小圆角 */
+  --sys-font-sans: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+  --sys-font-mono: "JetBrains Mono", "Space Mono", ui-monospace, monospace;
+}
+
+/* ==========================================================================
+   Component Primitives (.sys-*)
+   ========================================================================== */
+
+/* 1. 分割线族 */
+.sys-rule {
+  border: 0;
+  border-top: 1px solid var(--sys-border);
+  margin: 0;
+}
+
+.sys-rule-strong {
+  border: 0;
+  border-top: 1px solid var(--sys-border-strong);
+  margin: 0;
+}
+
+.sys-rule-amber {
+  border: 0;
+  border-top: 1px solid var(--sys-amber);
+  margin: 0;
+}
+
+/* 2. 标识徽章与元数据 Eyebrow */
+.sys-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sys-font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sys-text-muted);
+}
+
+.sys-eyebrow-amber {
+  color: var(--sys-amber);
+}
+
+.sys-dot-live {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--sys-amber);
+  animation: sys-pulse 2s infinite ease-in-out;
+}
+
+@keyframes sys-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.9); }
+}
+
+/* 3. 标签与代号 Tag */
+.sys-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  font-family: var(--sys-font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  border-radius: var(--sys-radius);
+  background-color: var(--sys-panel-subtle);
+  border: 1px solid var(--sys-border);
+  color: var(--sys-text-secondary);
+}
+
+.sys-tag-amber {
+  background-color: var(--sys-amber-soft);
+  border-color: var(--sys-amber-border);
+  color: var(--sys-amber);
+}
+
+/* 4. 面板容器 Panel */
+.sys-panel {
+  background-color: var(--sys-panel);
+  border: 1px solid var(--sys-border);
+  border-radius: var(--sys-radius);
+  padding: 24px;
+}
+
+.sys-panel:hover {
+  border-color: var(--sys-border-strong);
+}
+
+/* 5. 核心金句引言 Quote */
+.sys-quote {
+  border-left: 2px solid var(--sys-amber);
+  padding-left: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--sys-text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* 6. 按键族 Buttons */
+.sys-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background-color: #ffffff;
+  color: #0d0f12;
+  font-family: var(--sys-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--sys-radius);
+  border: 1px solid #ffffff;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sys-btn-primary:hover {
+  background-color: var(--sys-amber);
+  border-color: var(--sys-amber);
+  color: #000000;
+}
+
+.sys-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background-color: transparent;
+  color: var(--sys-text-body);
+  font-family: var(--sys-font-mono);
+  font-size: 11px;
+  border-radius: var(--sys-radius);
+  border: 1px solid var(--sys-border-strong);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.sys-btn-ghost:hover {
+  border-color: var(--sys-amber);
+  color: var(--sys-amber);
+  background-color: var(--sys-amber-soft);
+}
+
+/* 7. 架构拓扑节点 Topology Nodes */
+.sys-topo-in {
+  padding: 8px 10px;
+  background-color: #07080a;
+  border: 1px solid var(--sys-border);
+  border-radius: var(--sys-radius);
+  text-align: center;
+}
+
+.sys-topo-core {
+  padding: 12px 16px;
+  background-color: #07080a;
+  border: 1px solid var(--sys-amber);
+  border-radius: var(--sys-radius);
+  text-align: center;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.08);
+}
+
+.sys-topo-slot {
+  padding: 8px 12px;
+  background-color: rgba(19, 22, 28, 0.6);
+  border: 1px dashed var(--sys-border-dashed);
+  border-radius: var(--sys-radius);
+}
