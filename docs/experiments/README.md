@@ -17,7 +17,7 @@
 | 2026.04 首次 vibe coding | [第一次 Agent 协作](2026-04-first-agent-project.md) | 已整理文案及三张打码截图 |
 | 2026.05 起 JetBao | [JetBao](2026-05-jetbao.md) | 本人认为已基本说清；保留反馈经历和三阶段截图 |
 | 2026.06 起 GEO | [GEO](2026-06-geo.md) | 本人确认本轮讲到这里即可，已收束；事实 → 方法论与商业 → 界面 → 自动化判断；保留草稿与证据 |
-| mentti-dashboard | [Dashboard](mentti-dashboard.md) | 重点展示设计；补查目录与身份管理演进，保留作者归属边界；本人设计动机待补 |
+| mentti-dashboard | [Dashboard](mentti-dashboard.md) | 本人确定 Private 互动、新应用动态接入两个点；已补设计迭代、动态目录与统一身份管理原话及代码；缘起与结果待补 |
 | Probe | [Probe](probe.md) | 已记录来源；补查异步删除、统计口径与操作体验；个人经历待补 |
 | Post 与插件 | [Post 与插件](post-and-plugin.md) | 作为 GEO 自动化阶段随本轮收束；保留原始对话、worktree 和插件证据，未核实项不补猜 |
 | LLM Wiki | [LLM Wiki](llm-wiki.md) | 补查长文恢复、来源校验与手机阅读；缘起及本人判断待补 |
@@ -25,6 +25,7 @@
 | 两条成长线 | [叙事草稿](two-tracks.md) | 已整理双线与候选文案；补充结果、个人设计判断、视觉对照和角色的优先级；待本人认可措辞 |
 | 本轮仓库核查 | [提交证据](commit-evidence-2026-10-08.md) | JetBao、Dashboard、Probe、LLM Wiki 的历史证据；与实际使用及贡献归属分开 |
 | Post / 插件专项核查 | [证据](post-plugin-evidence-2026-10-08.md) | 原始会话、固定提交、worktree 状态，区分旧版回填与 V6 桥接 |
+| Dashboard 动态接入核查 | [证据](dashboard-dynamic-app-evidence-2026-10-08.md) | 动态应用目录、身份接入及原始决策的固定证据 |
 
 表中没有日期的项目尚未确定真实出现顺序，不按仓库创建时间强行排序。
 

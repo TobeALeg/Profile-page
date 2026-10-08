@@ -13,6 +13,7 @@
 - docs/experiments/two-tracks.md：工程与 AI 两条叙事的编辑草稿、GEO 提交和 CC 对话来源。
 - docs/experiments/commit-evidence-2026-10-08.md：其他候选案例的固定历史提交证据，保留贡献与验证边界。
 - docs/experiments/post-plugin-evidence-2026-10-08.md：Post 重构的原始对话与 worktree 留存，以及插件旧版回填 / V6 桥接的分支证据。
+- docs/experiments/dashboard-dynamic-app-evidence-2026-10-08.md：Dashboard 后台动态目录与身份接入的固定证据；Private 设计对话与版本记录放在 Dashboard 案例中。
 - assets/experiments/、output/playwright/jetbao/：已保存截图，案例文档通过相对路径引用。
 
 ### data flow
