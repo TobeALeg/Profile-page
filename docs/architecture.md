@@ -12,6 +12,7 @@
 - docs/experiments/*.md：每个案例或跨项目主题的叙述、素材与待补问题。
 - docs/experiments/two-tracks.md：工程与 AI 两条叙事的编辑草稿、GEO 提交和 CC 对话来源。
 - docs/experiments/commit-evidence-2026-10-08.md：其他候选案例的固定历史提交证据，保留贡献与验证边界。
+- docs/experiments/post-plugin-evidence-2026-10-08.md：Post 重构的原始对话与 worktree 留存，以及插件旧版回填 / V6 桥接的分支证据。
 - assets/experiments/、output/playwright/jetbao/：已保存截图，案例文档通过相对路径引用。
 
 ### data flow
