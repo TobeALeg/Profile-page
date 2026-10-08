@@ -8,18 +8,22 @@
 
 每个案例独立保存 Markdown。本人叙述、仓库证据、编辑建议和待补问题分开记录；记不清的部分不补猜。讨论得到新的具体信息后及时更新对应文件。
 
+2026-10-08 本人提出从两条线开始叙事：工程能力（完成项目）与 AI 能力（把项目做漂亮）。本轮先根据已有资料提炼，不继续访谈；阶段组织与串联文案尚属编辑草稿，见 [两条成长线](two-tracks.md)。
+
 ## 案例与状态
 
 | 项目 | 文档 | 当前状态 |
 | --- | --- | --- |
 | 2026.04 首次 vibe coding | [第一次 Agent 协作](2026-04-first-agent-project.md) | 已整理文案及三张打码截图 |
 | 2026.05 起 JetBao | [JetBao](2026-05-jetbao.md) | 已整理反馈经历及 5、8、9 月三个版本截图 |
-| 2026.06 起 GEO | [GEO](2026-06-geo.md) | 已记录验证、展示、运营、自动化四阶段；待补截图及具体转折 |
-| mentti-dashboard | [Dashboard](mentti-dashboard.md) | 重点展示设计；待深入讨论 |
-| Probe | [Probe](probe.md) | 已记录与 GEO 的来源关系；待深入讨论 |
+| 2026.06 起 GEO | [GEO](2026-06-geo.md) | 已记录四阶段；补查提交及 8 月 CC 对话，提炼方法论、模型一致性与审核 UX；待补截图 |
+| mentti-dashboard | [Dashboard](mentti-dashboard.md) | 重点展示设计；补查目录与身份管理演进，保留作者归属边界；本人设计动机待补 |
+| Probe | [Probe](probe.md) | 已记录来源；补查异步删除、统计口径与操作体验；个人经历待补 |
 | Post 与插件 | [Post 与插件](post-and-plugin.md) | 已记录来源；具体项目对应和贡献待补 |
-| LLM Wiki | [LLM Wiki](llm-wiki.md) | 已确定展示；待深入讨论 |
+| LLM Wiki | [LLM Wiki](llm-wiki.md) | 补查长文恢复、来源校验与手机阅读；缘起及本人判断待补 |
 | 跨项目方法变化 | [AI 协作方法](ai-working-methods.md) | 已记录 Skills、结构、文档、设计与 UX 方向；时间待补 |
+| 两条成长线 | [叙事草稿](two-tracks.md) | 已整理工程与 AI 两条线、第一人称候选文案及 GEO / CC 证据；待本人认可措辞 |
+| 本轮仓库核查 | [提交证据](commit-evidence-2026-10-08.md) | JetBao、Dashboard、Probe、LLM Wiki 的历史证据；与实际使用及贡献归属分开 |
 
 表中没有日期的项目尚未确定真实出现顺序，不按仓库创建时间强行排序。
 
