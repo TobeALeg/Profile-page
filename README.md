@@ -27,6 +27,10 @@
 
 ---
 
+## 内容整理进度
+
+AI Experiments 已确定采用成长时间线，现有页面仍保留早期三卡片布局。最新案例、范围与待补内容见 [内容索引](docs/experiments/README.md)，产品与文件结构见 [product.md](docs/product.md) 和 [architecture.md](docs/architecture.md)。文档落盘不代表已修改或发布页面。
+
 ## 🚀 部署与预览
 
 ### 本地预览
