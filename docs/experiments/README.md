@@ -22,7 +22,7 @@
 | Post 与插件 | [Post 与插件](post-and-plugin.md) | 已记录来源；具体项目对应和贡献待补 |
 | LLM Wiki | [LLM Wiki](llm-wiki.md) | 补查长文恢复、来源校验与手机阅读；缘起及本人判断待补 |
 | 跨项目方法变化 | [AI 协作方法](ai-working-methods.md) | 已记录 Skills、结构、文档、设计与 UX 方向；时间待补 |
-| 两条成长线 | [叙事草稿](two-tracks.md) | 已整理工程与 AI 两条线、第一人称候选文案及 GEO / CC 证据；待本人认可措辞 |
+| 两条成长线 | [叙事草稿](two-tracks.md) | 已整理双线与候选文案；补充结果、个人设计判断、视觉对照和角色的优先级；待本人认可措辞 |
 | 本轮仓库核查 | [提交证据](commit-evidence-2026-10-08.md) | JetBao、Dashboard、Probe、LLM Wiki 的历史证据；与实际使用及贡献归属分开 |
 
 表中没有日期的项目尚未确定真实出现顺序，不按仓库创建时间强行排序。
