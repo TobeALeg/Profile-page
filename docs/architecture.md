@@ -31,3 +31,11 @@
 待讨论 → 已记录经历 → 草稿与素材整理 → 网页整合 → 发布。
 
 记录信息与认可定稿分开：文件落盘不代表本人已认可所有编辑措辞，也不代表页面已修改或发布。当前案例进度以索引为准。
+
+## 2026-10-12 实现结构
+
+`index.html` 现在直接呈现案例摘要与双语文案；仍不自动读取 Markdown。`portfolio.css` 使用原生 CSS 实现桌面双栏、时间线日期、三阶段图片，以及手机单栏；引用既有 `system-tokens.css`。浏览器仅执行语言切换与 localStorage 偏好持久化，未增加 API、分析或账号服务。
+
+`npm run check` 执行零依赖静态检查；`npm run build` 把 HTML、两个 CSS 与实际图片复制为 `dist/` 静态产物。`npm run preview` 使用 Python HTTP 服务，仅绑定 127.0.0.1:4173。无 TypeScript 或框架编译链。
+
+截图 QA 位于 `output/playwright/portfolio/`，不进入网页构建产物。修改原有案例记录仍需按 AGENTS.md 保持来源与不确定性边界。状态已进入网页整合，没有进入公开发布。

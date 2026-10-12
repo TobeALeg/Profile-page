@@ -1,43 +1,41 @@
-# Dandi (TobeALeg) Profile Page & Design System
+# Dandi / TobeALeg — Github Portfolio
 
-> Personal showcase page & design system specification for Dandi (@TobeALeg).  
-> **Aesthetic Philosophy:** Swiss Systems Lab (方案 B · 瑞士理性实验室) — Systems Architect & Toolmaker.
+个人主页沿用 **Swiss Systems Lab** 设计系统：深色画布、琥珀强调色、清晰分隔与系统图。纯 HTML / CSS / JavaScript，无运行时依赖。
 
----
+## 内容
 
-## 📑 仓库资产清单 (Repository Manifest)
+- Worket：保留既有项目介绍与工作记录结构，不新增未经整理的经历。
+- AI Experiments：首次 Agent 协作、JetBao 三阶段界面、GEO 的事实与目的、Dashboard 两个设计/工程转折，以及 LLM Wiki 的留存实现。
+- Writing & Methods：已有协作方法记录，以及真实的 Observation-Notes 链接。
 
-| 文件 | 描述 |
-| :--- | :--- |
-| [`design.md`](./design.md) | **展示页完整设计系统规范文档**：涵盖定位主旨、设计反模式、色彩系统、字体排印、核心组件令牌 (`.sys-*`)、Worket 解耦拓扑图规范、三段式信息架构及中英双语对齐字典。 |
-| [`system-tokens.css`](./system-tokens.css) | **标准化设计令牌与组件原子库**：包含 `--sys-ground`、`--sys-panel`、`--sys-amber` 以及 `.sys-eyebrow`、`.sys-tag`、`.sys-quote`、`.sys-btn-primary`、`.sys-topo-core` 等标准 CSS 类。 |
-| [`index.html`](./index.html) | **双语实机展示页源码**：开箱即用的单页 Web 应用，支持中英文即时无缝切换，原生集成了 Worket 架构拓扑、活跃实验矩阵与议题式写作索引。 |
+案例依据 [内容索引](docs/experiments/README.md)；截图标明版本、重截和演示数据范围。LLM Wiki 的代码日期不作为个人探索起点。未整理的过程和业务成果不补猜。
 
----
+## 本地预览
 
-## 🧭 核心内容结构 (Information Architecture)
+```sh
+npm run preview
+```
 
-- **01 WORKET (What I'm building)**  
-  *“Work should survive the agent that executes it.”*  
-  展现状态持久化与执行者（Codex / WorkBuddy / 下一代 Agent）热替换的解耦架构。
-- **02 EXPERIMENTS (What I'm testing)**  
-  展示实际探索的 3 个技术矩阵：`LLM Wiki` (MCP 活知识库)、`Agent Skills` (可复用技能与约束规范)、`AI Workflows` (人机协同管线)。
-- **03 WRITING (What I'm thinking)**  
-  非时间流、议题式 3 栏思想网络：`AI & Agents`、`Future of Work`、`Startup Notes` (包含 [`Observation-Notes`](https://tobealeg.github.io/Observation-Notes/) 创业判断日志)。
+打开 http://127.0.0.1:4173 。也可直接打开 `index.html`。双语切换会保留语言选择。
 
----
+## 构建与检查
 
-## 内容整理进度
+需 Node.js 和 Python 3；无需安装 npm 依赖。
 
-AI Experiments 已确定采用成长时间线，现有页面仍保留早期三卡片布局。最新案例、范围与待补内容见 [内容索引](docs/experiments/README.md)，产品与文件结构见 [product.md](docs/product.md) 和 [architecture.md](docs/architecture.md)。文档落盘不代表已修改或发布页面。
+```sh
+npm run check
+npm run build
+```
 
-## 🚀 部署与预览
+`dist/` 是自包含的静态产物。`check` 验证脚本语法、唯一 ID、页面锚点、图片/样式路径及案例数量。本项目无 TypeScript，类型检查不适用。
 
-### 本地预览
-直接在浏览器中打开 [`index.html`](./index.html) 即可浏览完整效果与双语切换。
+## 文件
 
-### 部署至 GitHub Pages
-1. 在 GitHub 仓库设置中进入 **Settings → Pages**；
-2. **Build and deployment** 选择 `Deploy from a branch`；
-3. Branch 选择 `main` / `/ (root)`，点击 Save；
-4. 即可在 `https://tobealeg.github.io/Profile-page/` 获得公开访问的个人主页。
+- `index.html`：双语内容、语义 HTML、语言切换。
+- `system-tokens.css`：既有设计令牌。
+- `portfolio.css`：响应式页面布局、交互与减少动态效果支持。
+- `scripts/`：零依赖构建和静态检查。
+- `docs/`：产品、架构和案例证据。
+- `output/playwright/portfolio/`：桌面与手机验证截图。
+
+当前只完成网页实现与本地预览，未部署、推送或变更共享权限。
