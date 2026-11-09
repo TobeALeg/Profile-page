@@ -60,7 +60,7 @@
     "en": "This is the future I want to work toward. Worket is one step I am building: helping AI take on work people have already defined, and making execution and feedback a basis for continued improvement, gradually freeing people’s time and creativity."
   },
   "section-intro-1": {
-    "zh": "从第一次赶在截止前完成项目，到开始关心系统、设计和真实使用。",
+    "zh": "vibe coding 历程，每一个项目积累的经验都是共通的。\n研究用哪个开发 skill -> 如何维护自己的code context -> 长程开发如何保持一致性 -> 用户真正需要什么，我要传达什么信息\n\n从产品到商业 ，这也是我的思考逻辑之一",
     "en": "From delivering against a deadline to caring about systems, design, and real use."
   },
   "p-6": {
@@ -168,7 +168,7 @@
     "en": "The retained build may differ from the first delivery. Figures are not evidence of business outcomes; no screenshot of the map survives."
   },
   "section-intro-2": {
-    "zh": "从描述结果，到明确结构、设计与体验。",
+    "zh": "那些和 AI 无关的事儿",
     "en": "From describing an outcome to defining structure, design, and experience."
   },
   "h3-6": {
@@ -216,7 +216,7 @@
     "en": "Worket / GitHub ↗"
   },
   "fixed-h2-2": {
-    "zh": "AI EXPERIMENTS",
+    "zh": "AI Application",
     "en": "AI EXPERIMENTS"
   },
   "fixed-a-3": {
