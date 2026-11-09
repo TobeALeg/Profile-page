@@ -12,11 +12,11 @@
     "en": "03.Writing"
   },
   "hero-eyebrow": {
-    "zh": "SYS: 建造者与写作者 // 架构与智能体",
+    "zh": "SYS: 用历史的眼光看未来 // 用宏观的角度做微观",
     "en": "SYS: BUILDER & WRITER // ARCHITECTURE & AGENTS"
   },
   "hero-title": {
-    "zh": "我构建工具，也记录 AI 如何重塑我们的工作方式。",
+    "zh": "AI 知我意，思考如呼吸",
     "en": "I build and write about how AI changes the way we work."
   },
   "hero-sub": {
@@ -28,31 +28,31 @@
     "en": "Follow the experiments"
   },
   "future-title-1": {
-    "zh": "把确定的工作交给 AI，把人的时间还给创造。",
+    "zh": "把确定的工作交给 AI，\n把人的时间还给创造。",
     "en": "Give defined work to AI. Give people time to create."
   },
   "future-intro-1": {
-    "zh": "我希望有一天，我们上班时，终于有时间去解决那些一直看得见、却一直没空解决的问题。",
+    "zh": "AI 走进每个人的生活之后，应该解放生产力和创造力，这才是我们发展科技的意义。\n\n这个系列，和我一起推导社会发展进程，\n看看 AI 究竟会把这个社会变成什么样子。",
     "en": "I hope that one day, we come to work with time to solve the problems we have always noticed, but never had time to address."
   },
   "p-1": {
-    "zh": "早上打开电脑，已经确定怎么做的日常工作，AI 已经按约定完成。你检查结果，追问一处异常，退回一份不够好的交付，并为最终采用的结果负责。",
+    "zh": "无需到工位，AI 已经按约定完成所有它能做的事情。\n检查结果，追问异常，退回审批，并为结果负责，这可能就是未来的工作形态。\n但这只是在为 AI 的工作负责， 不是人的责任。",
     "en": "You open your computer in the morning. AI has completed the routine work according to agreed requirements. You review the results, question an anomaly, send one piece back for revision, and take responsibility for what you accept."
   },
   "p-2": {
-    "zh": "然后，你可以去看那件惦记了很久的事：为什么客户总在同一个环节等上两天？你找同事聊，听客户怎么说，试着设计一种新的服务方式。",
+    "zh": "探索某个环节是否还有被优化的可能，思考某个任务的定义是否还能更加准确，这些不局限于既有流程的创造性工作，是我们和 AI 的核心区别。",
     "en": "Then you turn to something that has bothered you for months: why do customers always wait two days at the same step? You talk to colleagues, listen to customers, and try designing a new way to serve them."
   },
   "future-pullquote-1": {
-    "zh": "那个总被推到“忙完再说”的想法，今天终于有机会开始。",
+    "zh": "当 AI 像水一样普及，谁能最大程度地调动员工的创造力，谁就是下一个时代的企业赢家。",
     "en": "The idea you always put off until things quiet down finally has room to begin."
   },
   "p-3": {
-    "zh": "在你探索新问题的时候，AI 也在改进已经接手的工作：哪些步骤可以省掉，哪条路径更有效，哪些工作要求需要修正。每一次执行、检查和反馈，都成为下一次改进的依据。",
+    "zh": "本质上， 任何一次工业革命干的都是这个事儿， 取代一部分重复劳动， 把人放在更有价值的位置上去。 或者说，放到当前的机器还做不了的事情上去。\n区别在于，这次革命的语言太像人了，能力范围又太大了。 不禁让人忽略了它本身作为一个工具的属性，反而开始担忧是不是真的自己的价值会被完全取代。 \n不过也可以理解，每次都是这样的。",
     "en": "While you explore new problems, AI improves the work it has taken on: which steps can be removed, which approach works better, and which requirements need revising. Each execution, review, and piece of feedback informs the next improvement."
   },
   "p-4": {
-    "zh": "人去发现新的可能、创造新的价值，并为判断负责；AI 持续优化已有的实现路径和工作定义。这也是我所期待的 RSI 的基础，让人的创造与 AI 的改进不断推动彼此，释放更大的生产力。",
+    "zh": "当我们身处时代的洪流中， 即使是最前沿的研究者，也会发出《我不得不把才华埋葬在昨天》这样的感慨。事已至此，踌躇、回望，已是无用，不止要拥抱，还要引领。不过是一次技术革命，那就按照技术革命的根本逻辑来：这个革命最终会把社会变成什么样子，而我能从中取得哪一杯羹。这些都可以推导，都有迹可循。\n以史为鉴，可以知兴衰。\n",
     "en": "People discover possibilities, create value, and remain accountable for their decisions. AI keeps improving existing approaches and work definitions. This is the foundation I envision for RSI: human creativity and AI improvement advancing together to unlock greater productivity."
   },
   "p-5": {
