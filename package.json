@@ -1,4 +1,15 @@
 {
- "name":"dandi-portfolio", "version":"1.0.0", "private":true,
- "scripts":{"build":"node scripts/build.mjs", "check":"node scripts/check.mjs", "test":"node --test scripts/editor.test.mjs", "preview":"node scripts/preview.mjs"}
+ "name": "dandi-portfolio",
+ "version": "1.0.0",
+ "private": true,
+ "type": "module",
+ "scripts": {
+  "build": "node scripts/build.mjs",
+  "check": "node scripts/check.mjs",
+  "test": "node --test scripts/editor.test.mjs",
+  "preview": "node scripts/preview.mjs"
+ },
+ "dependencies": {
+  "parse5": "8.1.1"
+ }
 }

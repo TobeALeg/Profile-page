@@ -7,8 +7,8 @@ import { readContent, saveContent } from './content.mjs';
 import { renderPage } from './render.mjs';
 
 const MAX_BODY = 512 * 1024;
-const MIME = { '.css': 'text/css', '.js': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon' };
-const publicFiles = new Set(['/system-tokens.css', '/portfolio.css', '/portfolio.js', '/local-editor.css', '/local-editor.js']);
+const MIME = { '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.ico': 'image/x-icon' };
+const publicFiles = new Set(['/system-tokens.css', '/portfolio.css', '/portfolio.js', '/local-editor.css', '/local-editor.js', '/local-modules.mjs', '/module-copy.mjs']);
 
 function respond(response, status, data, type = 'application/json') {
   response.writeHead(status, { 'Content-Type': `${type}; charset=utf-8`, 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });

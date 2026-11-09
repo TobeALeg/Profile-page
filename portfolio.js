@@ -20,7 +20,11 @@
   window.portfolio = {
     get content() { return content; },
     get language() { return language; },
-    replaceContent(next) { content = next; setLang(language); },
+    replaceContent(next, layout) {
+      content = next;
+      if (layout !== undefined) document.querySelector('[data-editor-root]').innerHTML = layout;
+      setLang(language);
+    },
   };
   let preferred = 'zh';
   try { preferred = localStorage.getItem('portfolio-language') || 'zh'; } catch {}
