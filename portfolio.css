@@ -343,49 +343,6 @@ header nav a:hover {
 section[id] {
   padding:64px 0;
   border-bottom:1px solid #2e3440}
-.worket-layout {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:48px;
-  margin-top:28px}
-.worket-layout blockquote {
-  margin:0;
-  border-left:2px solid var(--sys-amber);
-  padding-left:18px;
-  color:#fff;
-  font-size:23px;
-  line-height:1.5;
-  font-weight:600}
-.worket-layout p {
-  color:#aeb5c1;
-  font-size:14px;
-  line-height:1.9;
-  margin:24px 0 0}
-.worket-diagram {
-  margin:0;
-  padding:28px;
-  border:1px solid #2e3440;
-  font:12px var(--sys-font-mono)}
-.diagram-inputs {
-  display:flex;
-  justify-content:center;
-  gap:10px}
-.diagram-inputs span {
-  flex:1;
-  border:1px solid #2e3440;
-  padding:10px 4px;
-  text-align:center}
-.diagram-core {
-  text-align:center;
-  padding:16px 4px;
-  border:1px solid var(--sys-amber);
-  color:var(--sys-amber)}
-.diagram-arrow {
-  text-align:center;
-  padding:12px;
-  color:#9da4b0}
-.worket-diagram figcaption {
-  text-align:center}
 footer {
   display:flex;
   justify-content:space-between;
@@ -411,23 +368,6 @@ h2,h3,p {
   justify-content:space-between}
 .hero h1 {
   font-size:40px}
-.worket-layout {
-  grid-template-columns:1fr;
-  gap:28px}
-}
-
-@media(max-width:640px) {
-  .hero h1 {
-  font-size:32px}
-.hero>div>div:first-child {
-  font-size:10px;
-  line-height:1.7}
-section[id] {
-  padding:44px 0}
-.worket-diagram {
-  padding:18px}
-.worket-layout blockquote {
-  font-size:21px}
 footer {
   flex-direction:column;
   line-height:1.7}
@@ -439,6 +379,18 @@ header nav a {
 
 figure {
   margin:26px 0 0}
-.worket-diagram {
-  margin:0}
 
+
+.future-layout { display:grid; grid-template-columns: .9fr 1.1fr; gap:64px; margin-top:40px; }
+.future-title { color:#fff; font-size:36px; line-height:1.5; letter-spacing:-.04em; font-weight:600; }
+.future-intro { color:#b7beca; font-size:17px; line-height:1.9; margin-top:28px; }
+.future-story p,.future-practice p { color:#aeb5c1; font-size:15px; line-height:1.95; }
+.future-story p + p { margin-top:20px; }
+.future-pullquote { color:var(--sys-amber); font-size:23px; line-height:1.7; margin:32px 0; padding:0 0 0 20px; border-left:2px solid var(--sys-amber); }
+.future-practice { display:grid; grid-template-columns:.9fr 1.1fr; gap:64px; margin-top:48px; padding-top:28px; border-top:1px solid #2e3440; }
+.future-practice h3 { color:#fff; font-size:28px; margin-top:12px; }
+@media(max-width:800px) {
+  .future-layout,.future-practice { grid-template-columns:1fr; gap:28px; }
+  .future-title { font-size:30px; max-width:620px; }
+  .future-intro { margin-top:20px; }
+}
