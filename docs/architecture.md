@@ -38,4 +38,6 @@
 
 `npm run check` 执行零依赖静态检查；`npm run build` 把 HTML、两个 CSS 与实际图片复制为 `dist/` 静态产物。`npm run preview` 使用 Python HTTP 服务，仅绑定 127.0.0.1:4173。无 TypeScript 或框架编译链。
 
+2026-11-09：移除 Hero 介绍段落及中英文 `hero-sub` 词条，语言切换不再维护该文案。
+
 截图 QA 位于 `output/playwright/portfolio/`，不进入网页构建产物。修改原有案例记录仍需按 AGENTS.md 保持来源与不确定性边界。状态已进入网页整合，没有进入公开发布。
