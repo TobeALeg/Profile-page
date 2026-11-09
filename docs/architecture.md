@@ -10,6 +10,7 @@
 - docs/product.md：产品定位与已确认的内容原则。
 - docs/experiments/README.md：案例索引、范围和整理状态。
 - docs/experiments/*.md：每个案例或跨项目主题的叙述、素材与待补问题。
+- docs/experiments/future-of-work.md：01 未来工作愿景与当下实践的内容记录，区分本人叙述、仓库依据、编辑建议与待补问题；尚未接入页面。
 - docs/experiments/two-tracks.md：工程与 AI 两条叙事的编辑草稿、GEO 提交和 CC 对话来源。
 - docs/experiments/commit-evidence-2026-10-08.md：其他候选案例的固定历史提交证据，保留贡献与验证边界。
 - docs/experiments/post-plugin-evidence-2026-10-08.md：Post 重构的原始对话与 worktree 留存，以及插件旧版回填 / V6 桥接的分支证据。
