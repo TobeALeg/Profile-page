@@ -4,7 +4,12 @@
 
 ### module relationship
 
-- index.html：现有静态双语页面。
+- index.html：页面结构模板，`data-copy` 标识可编辑文字。
+- content.json：中英文网页文案的唯一内容源，按稳定键保存。
+- portfolio.js：读取页面内嵌内容并切换语言。
+- scripts/content.mjs、scripts/render.mjs：文案结构校验、版本检查、原子保存与静态 HTML 渲染。
+- scripts/preview.mjs：仅监听 127.0.0.1 的预览服务，提供文案读取与保存接口。
+- local-editor.js、local-editor.css：仅本地注入的直接编辑工具，不进入静态构建。
 - system-tokens.css：现有设计令牌与组件样式。
 - design.md：既有视觉规范；其中 Experiments 三卡片方案早于本轮时间线决定。
 - docs/product.md：产品定位与已确认的内容原则。
@@ -44,3 +49,15 @@
 截图 QA 位于 `output/playwright/portfolio/`，不进入网页构建产物。修改原有案例记录仍需按 AGENTS.md 保持来源与不确定性边界。状态已进入网页整合，没有进入公开发布。
 
 2026-11-09：01 改为未来工作场景与 Worket 实践，沿用 `#worket` 锚点；`portfolio.css` 用双栏叙事和移动端单栏替代旧工作对象结构图，旧图样式同步移除。
+
+## 2026-11-09：可持久保存的本地编辑
+
+当前内容流：`content.json` + `index.html` 模板 → 本地预览 / `npm run build` 的共同渲染器 → 带中文正文及内嵌双语 JSON 的 HTML → `portfolio.js` 切换语言。每个可编辑元素只承担一个文本字段，不允许嵌套可编辑内容。输出文字进行 HTML 转义，内嵌 JSON 转义 `<`，浏览器采用 `textContent` 渲染；换行通过 `white-space: pre-wrap` 保留。
+
+编辑状态：浏览 → 编辑 → 本地未保存 → 保存中 → 已保存；失败继续保留本地修改。用户每次只修改当前语言，同一编辑会话可包含双语变更。保存快照与保存过程中后续输入分别保留，不能将较晚输入误标为已保存；“完成”只有全部内容保存后才退出。
+
+`PUT /__editor/content` 仅接受本地同源 JSON 请求及本次服务的随机 token。页面加载时取得与显示内容对应的 SHA-256 修订号，保存前再次核对文件版本；冲突返回 409，字段集合或类型无效返回 400。通过同目录临时文件加 rename 原子替换 `content.json`。服务只读公开资源白名单，不暴露源文档或 Git 目录；每次启动生成新 token，不使用在线服务或登录系统。
+
+`npm run preview` 现在启动 Node 零依赖本地服务，替代旧 Python 静态服务；仍使用 127.0.0.1:4173。`npm run build` 输出中文已渲染的 HTML、语言脚本、样式与图片，不复制编辑脚本、接口、token 或源文档。未增加框架或外部依赖。
+
+`npm test` 用隔离临时目录验证双语保存、刷新与服务重启后的持久性、静态渲染、HTML 转义、冲突保护及本地接口边界；不改真实网页内容。文案的后续人工编辑以 `content.json` 为准，讨论 Markdown 不自动覆盖它。

@@ -1,6 +1,11 @@
 import fs from 'node:fs';
+import { readContent } from './content.mjs';
+import { renderPage } from './render.mjs';
+const { content, template } = readContent(process.cwd());
+fs.rmSync('dist', { recursive: true, force: true });
 fs.mkdirSync('dist',{recursive:true});
-for(const file of ['index.html','system-tokens.css','portfolio.css','assets']) fs.cpSync(file,`dist/${file}`,{recursive:true});
+fs.writeFileSync('dist/index.html', renderPage(template, content));
+for(const file of ['portfolio.js','system-tokens.css','portfolio.css','assets']) fs.cpSync(file,`dist/${file}`,{recursive:true});
 fs.mkdirSync('dist/output/playwright',{recursive:true});
 fs.cpSync('output/playwright/jetbao','dist/output/playwright/jetbao',{recursive:true});
 console.log('Built dependency-free static portfolio in dist/');

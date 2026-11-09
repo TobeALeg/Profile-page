@@ -1,0 +1,21 @@
+.local-editor { position:fixed; bottom:22px; right:24px; z-index:50; font:13px var(--sys-font-sans); color:#e1e4ea; }
+.local-editor button { border:1px solid #414857; border-radius:4px; background:#1b2029; color:#e1e4ea; padding:10px 14px; min-height:42px; white-space:nowrap; }
+.local-editor button:hover:not(:disabled) { border-color:var(--sys-amber); }
+.local-editor button:disabled { opacity:.4; cursor:default; }
+.local-editor [data-action=edit],.local-editor .editor-primary { background:var(--sys-amber); color:#111; border-color:var(--sys-amber); }
+.editor-controls { display:flex; align-items:center; gap:8px; padding:12px; background:#13171f; border:1px solid #414857; box-shadow:0 8px 32px #0008; border-radius:6px; max-width:calc(100vw - 48px); }
+.local-editor [hidden] { display:none; }
+.editor-info { display:flex; flex-direction:column; gap:5px; margin:0 14px 0 4px; max-width:360px; }
+.editor-info strong { font-size:12px; font-weight:500; }
+.editor-info [role=status] { color:#aeb5c1; font-size:12px; line-height:1.5; }
+.is-editing { padding-bottom:140px; }
+.is-editing [data-copy] { outline:1px dashed #a5afc344; outline-offset:5px; border-radius:1px; cursor:text; min-height:1em; min-width:1em; }
+.is-editing [data-copy]:hover { outline-color:#f5ae42aa; }
+.is-editing [data-copy]:focus { outline:1px solid var(--sys-amber); background:#f5ae4209; }
+@media(max-width:640px) {
+  .local-editor { bottom:12px; right:12px; left:12px; display:flex; justify-content:flex-end; }
+  .editor-controls { width:100%; max-width:none; flex-wrap:wrap; gap:8px; }
+  .editor-info { flex-basis:100%; max-width:none; margin:0 0 4px; }
+  .editor-controls button { flex:1; }
+  .is-editing { padding-bottom:180px!important; }
+}

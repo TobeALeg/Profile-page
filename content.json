@@ -1,0 +1,270 @@
+{
+  "nav-worket": {
+    "zh": "01.未来",
+    "en": "01.Future"
+  },
+  "nav-experiments": {
+    "zh": "02.探索",
+    "en": "02.Experiments"
+  },
+  "nav-writing": {
+    "zh": "03.思考",
+    "en": "03.Writing"
+  },
+  "hero-eyebrow": {
+    "zh": "SYS: 建造者与写作者 // 架构与智能体",
+    "en": "SYS: BUILDER & WRITER // ARCHITECTURE & AGENTS"
+  },
+  "hero-title": {
+    "zh": "我构建工具，也记录 AI 如何重塑我们的工作方式。",
+    "en": "I build and write about how AI changes the way we work."
+  },
+  "span-1": {
+    "zh": "沿着时间线看我的探索",
+    "en": "Follow the experiments"
+  },
+  "future-title-1": {
+    "zh": "把确定的工作交给 AI，把人的时间还给创造。",
+    "en": "Give defined work to AI. Give people time to create."
+  },
+  "future-intro-1": {
+    "zh": "我希望有一天，我们上班时，终于有时间去解决那些一直看得见、却一直没空解决的问题。",
+    "en": "I hope that one day, we come to work with time to solve the problems we have always noticed, but never had time to address."
+  },
+  "p-1": {
+    "zh": "早上打开电脑，已经确定怎么做的日常工作，AI 已经按约定完成。你检查结果，追问一处异常，退回一份不够好的交付，并为最终采用的结果负责。",
+    "en": "You open your computer in the morning. AI has completed the routine work according to agreed requirements. You review the results, question an anomaly, send one piece back for revision, and take responsibility for what you accept."
+  },
+  "p-2": {
+    "zh": "然后，你可以去看那件惦记了很久的事：为什么客户总在同一个环节等上两天？你找同事聊，听客户怎么说，试着设计一种新的服务方式。",
+    "en": "Then you turn to something that has bothered you for months: why do customers always wait two days at the same step? You talk to colleagues, listen to customers, and try designing a new way to serve them."
+  },
+  "future-pullquote-1": {
+    "zh": "那个总被推到“忙完再说”的想法，今天终于有机会开始。",
+    "en": "The idea you always put off until things quiet down finally has room to begin."
+  },
+  "p-3": {
+    "zh": "在你探索新问题的时候，AI 也在改进已经接手的工作：哪些步骤可以省掉，哪条路径更有效，哪些工作要求需要修正。每一次执行、检查和反馈，都成为下一次改进的依据。",
+    "en": "While you explore new problems, AI improves the work it has taken on: which steps can be removed, which approach works better, and which requirements need revising. Each execution, review, and piece of feedback informs the next improvement."
+  },
+  "p-4": {
+    "zh": "人去发现新的可能、创造新的价值，并为判断负责；AI 持续优化已有的实现路径和工作定义。这也是我所期待的 RSI 的基础，让人的创造与 AI 的改进不断推动彼此，释放更大的生产力。",
+    "en": "People discover possibilities, create value, and remain accountable for their decisions. AI keeps improving existing approaches and work definitions. This is the foundation I envision for RSI: human creativity and AI improvement advancing together to unlock greater productivity."
+  },
+  "p-5": {
+    "zh": "这是我想走向的未来。Worket 是我正在推进的一步：让已经被人做明白的工作能够交给 AI，让执行和反馈能够持续推动改进，逐步释放人的时间与创造力。",
+    "en": "This is the future I want to work toward. Worket is one step I am building: helping AI take on work people have already defined, and making execution and feedback a basis for continued improvement, gradually freeing people’s time and creativity."
+  },
+  "section-intro-1": {
+    "zh": "从第一次赶在截止前完成项目，到开始关心系统、设计和真实使用。",
+    "en": "From delivering against a deadline to caring about systems, design, and real use."
+  },
+  "p-6": {
+    "zh": "工程：把项目完成，做成可维护的系统。",
+    "en": "Engineering: deliver a project and make it maintainable."
+  },
+  "p-7": {
+    "zh": "AI 与设计：从能用，到可理解、用得舒服。",
+    "en": "AI & design: from functional to understandable and comfortable."
+  },
+  "h3-1": {
+    "zh": "LLM Wiki：可追溯，也要便于阅读",
+    "en": "LLM Wiki: traceability and reading"
+  },
+  "case-lead-1": {
+    "zh": "把 AI 整理变成能校验、能恢复的知识。",
+    "en": "Make AI-organized knowledge verifiable and recoverable."
+  },
+  "p-8": {
+    "zh": "留存实现包括事务提交、历史恢复生成新版本、长文分块和断点恢复，以及来源校验。移动端目录进入面板，切换目录保留阅读位置。这些是仓库记录；最初缘起和个人设计判断仍待整理，不把 9 月首次留存提交当作探索起点。",
+    "en": "Retained code includes transactional commits, recovery as a new version, chunked long documents, resumable operations, and source validation. Mobile navigation uses a panel and preserves reading position. These are repository records; the original motivation and personal design decisions remain undocumented. September’s first retained commit is not necessarily the start."
+  },
+  "h3-2": {
+    "zh": "Dashboard：看效果，再收敛设计",
+    "en": "Dashboard: preview, then refine"
+  },
+  "case-lead-2": {
+    "zh": "把入口提示放进标题；把应用入口与身份配置收进同一个对象。",
+    "en": "Put the cue in the title, and bring app entry and identity configuration together."
+  },
+  "p-9": {
+    "zh": "内部工具通过长按标题展开。我先要求在标题旁加按压按钮，看过效果后改成标题文字自身的动效，再调整字体、周期和下压节奏。另一个点是动态接入：拿到同事项目的部署地址后，在管理页维护入口，再逐步合并应用和身份配置。",
+    "en": "Internal tools open with a long press on the title. I first asked for an animated button beside it, then moved the animation into the title itself after previewing it, adjusting typography and timing. For dynamic app entry, I wanted to maintain a colleague’s deployment URL in the admin page and bring app and identity settings together."
+  },
+  "evidence-note-1": {
+    "zh": "长按控制的是展示分组，不是安全权限。目录管理不会替目标应用完成部署、登录或权限适配。",
+    "en": "The long press controls presentation, not authorization. Managing a directory does not deploy target apps or complete their login and permission integration."
+  },
+  "h3-3": {
+    "zh": "GEO：先有事实，再让内容有目的",
+    "en": "GEO: facts first, then purpose"
+  },
+  "case-lead-3": {
+    "zh": "先搞清楚内容服务谁，再让界面与自动化服务这些判断。",
+    "en": "Understand who the content serves, then build the interface and automation around that."
+  },
+  "p-10": {
+    "zh": "公司要求做 GEO 时，我先用 Claude Code 验证无头流程。内容要基于客户资料，以及客户对产品和客户的认知。之后，我花了很长时间理解内容的服务对象和目的，形成方法论与场景包：既解释商业问题，也说明每篇文章希望产生什么影响。后来才用 Codex 逐步做出客户展示和实际运营的界面。",
+    "en": "I first used Claude Code to validate a headless GEO workflow. Content needed grounding in client materials and their understanding of products and customers. I then worked on audience and purpose, developing a methodology and scenario packages to connect business questions with each article’s intended impact. The client-facing and operational interfaces came later, built gradually with Codex."
+  },
+  "p-11": {
+    "zh": "事实基础 → 服务对象 → 方法论与场景包 → 界面 → 自动化判断",
+    "en": "Facts → Audience → Methodology & scenarios → Interface → Automation"
+  },
+  "evidence-note-2": {
+    "zh": "Post 围绕同一份稿件管理版本与发布记录；发布插件采用半自动方式，保留人工确认。实现记录不等于已合并、已上线或已验证内容效果。",
+    "en": "Post manages versions and publication records around one article. The publishing extension uses a semi-automatic approach with human confirmation. Implementation records do not establish deployment or verified content impact."
+  },
+  "h3-4": {
+    "zh": "JetBao：从能用到用得舒服",
+    "en": "JetBao: from working to comfortable"
+  },
+  "case-lead-4": {
+    "zh": "我自测满意，同事却最想要“随手记一笔”。",
+    "en": "I was happy with my tests. My colleague wanted to jot down an expense."
+  },
+  "p-12": {
+    "zh": "最初是上传、识别和统计发票。交给同事过流程之后，我才逐渐理解他的报销习惯，回去加入先记录、再补材料的流程。一开始我觉得工具能用就行，后来才一点点调整界面。",
+    "en": "The first flow uploaded, recognized, and summarized invoices. Walking through it with a colleague taught me how he actually organized expenses. I added recording before attaching documents. Initially, I thought a tool only needed to work; the interface improved gradually."
+  },
+  "figcaption-1": {
+    "zh": "2026.05 · 先上传发票",
+    "en": "May 2026 · Invoice first"
+  },
+  "figcaption-2": {
+    "zh": "2026.08 · 先记一笔，再补材料",
+    "en": "Aug 2026 · Record first, attach later"
+  },
+  "figcaption-3": {
+    "zh": "2026.09 · 录入与记录同一个工作面",
+    "en": "Sep 2026 · Entry and records together"
+  },
+  "evidence-note-3": {
+    "zh": "2026-10-08 从三个 Git 留存版本重建截图，均为虚构演示数据；展示界面与入口，不代表生产效果或后端验收。点击图片查看原图。",
+    "en": "Recaptured Oct 8, 2026 from three Git versions, all with fictional demo data. These show interfaces, not production outcomes or backend acceptance. Open an image to inspect it."
+  },
+  "h3-5": {
+    "zh": "第一次与 Agent 共同完成项目",
+    "en": "My first project with an agent"
+  },
+  "case-lead-5": {
+    "zh": "只有一天，一个半成品，和迫在眉睫的 DDL。",
+    "en": "One day, a half-finished project, and a pressing deadline."
+  },
+  "p-13": {
+    "zh": "这是我入职后的第一个项目。我用 Claude Code 在已有代码上继续修改，一直干到凌晨四点。地图花了很久；具体怎么来回协作，已经记不清了。这是我的 vibe coding 起点。",
+    "en": "This was my first project after joining the company. I continued the existing code with Claude Code until 4 a.m. The map took a long time; I no longer remember the exact collaboration steps. This was my starting point with vibe coding."
+  },
+  "figcaption-4": {
+    "zh": "留存界面 · 2026-09-28 重截，名称与地区已遮挡",
+    "en": "Retained interface · recaptured Sep 28, 2026; names and regions masked"
+  },
+  "evidence-note-4": {
+    "zh": "截图来自留存构建，不保证是首次交付版本；数字不作为真实业务成果。地图没有留存截图。",
+    "en": "The retained build may differ from the first delivery. Figures are not evidence of business outcomes; no screenshot of the map survives."
+  },
+  "section-intro-2": {
+    "zh": "从描述结果，到明确结构、设计与体验。",
+    "en": "From describing an outcome to defining structure, design, and experience."
+  },
+  "h3-6": {
+    "zh": "结构",
+    "en": "Structure"
+  },
+  "p-14": {
+    "zh": "从纯 vibe coding，到要求维护 product、architecture 与 README，让 Agent 理解项目意图。",
+    "en": "From pure vibe coding to maintaining product, architecture, and README documents so agents can understand intent."
+  },
+  "h3-7": {
+    "zh": "设计",
+    "en": "Design"
+  },
+  "p-15": {
+    "zh": "从口头描述，到固定组件、design.md 与自己的 token 库。看实际效果，再改具体细节。",
+    "en": "From verbal descriptions to components, design.md, and my own tokens. Preview real results, then refine the details."
+  },
+  "h3-8": {
+    "zh": "体验",
+    "en": "Experience"
+  },
+  "p-16": {
+    "zh": "JetBao 的随手记和 Dashboard 的标题提示，让我逐渐更关心 UX，而不只是 UI。",
+    "en": "JetBao’s quick notes and Dashboard’s title cue drew my attention toward UX, beyond the interface alone."
+  },
+  "span-2": {
+    "zh": "创业判断日志",
+    "en": "Startup observation notes"
+  },
+  "fixed-a-1": {
+    "zh": "跳到案例 / Skip to cases",
+    "en": "跳到案例 / Skip to cases"
+  },
+  "fixed-h2-1": {
+    "zh": "FUTURE OF WORK",
+    "en": "FUTURE OF WORK"
+  },
+  "fixed-h3-9": {
+    "zh": "Worket",
+    "en": "Worket"
+  },
+  "fixed-a-2": {
+    "zh": "Worket / GitHub ↗",
+    "en": "Worket / GitHub ↗"
+  },
+  "fixed-h2-2": {
+    "zh": "AI EXPERIMENTS",
+    "en": "AI EXPERIMENTS"
+  },
+  "fixed-a-3": {
+    "zh": "LLM Wiki / GitHub ↗",
+    "en": "LLM Wiki / GitHub ↗"
+  },
+  "fixed-h2-3": {
+    "zh": "WRITING & METHODS",
+    "en": "WRITING & METHODS"
+  },
+  "fixed-a-4": {
+    "zh": "GitHub: @TobeALeg",
+    "en": "GitHub: @TobeALeg"
+  },
+  "fixed-a-5": {
+    "zh": "Observation-Notes",
+    "en": "Observation-Notes"
+  },
+  "fixed-span-3": {
+    "zh": "01 / A FUTURE WORTH BUILDING",
+    "en": "01 / A FUTURE WORTH BUILDING"
+  },
+  "fixed-span-4": {
+    "zh": "BUILDING TOWARD IT",
+    "en": "BUILDING TOWARD IT"
+  },
+  "fixed-span-5": {
+    "zh": "02 / FIELD NOTES",
+    "en": "02 / FIELD NOTES"
+  },
+  "fixed-div-1": {
+    "zh": "2026.09 / CODE",
+    "en": "2026.09 / CODE"
+  },
+  "fixed-div-2": {
+    "zh": "2026.08",
+    "en": "2026.08"
+  },
+  "fixed-div-3": {
+    "zh": "2026.06 →",
+    "en": "2026.06 →"
+  },
+  "fixed-div-4": {
+    "zh": "2026.05 → 09",
+    "en": "2026.05 → 09"
+  },
+  "fixed-div-5": {
+    "zh": "2026.04",
+    "en": "2026.04"
+  },
+  "fixed-span-6": {
+    "zh": "03 / REFLECTIONS",
+    "en": "03 / REFLECTIONS"
+  }
+}
