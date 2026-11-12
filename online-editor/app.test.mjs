@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { createEditor } from './app.mjs';
 import { OWNER_ID, SITE_URL } from './config.mjs';
 import { SESSION_COOKIE, LOGIN_COOKIE, seal, unseal } from './session.mjs';
@@ -12,8 +14,9 @@ const content = JSON.parse(fs.readFileSync('content.json', 'utf8'));
 const encoded = value => Buffer.from(value).toString('base64');
 const json = (value, status = 200) => new Response(JSON.stringify(value), { status });
 
-function fixture({ userId = OWNER_ID, conflict = false, basePath = '' } = {}) {
+function fixture(t, { userId = OWNER_ID, conflict = false, basePath = '' } = {}) {
   const calls = [];
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portfolio-app-'));
   const editor = createEditor(async (url, options = {}) => {
     const pathname = new URL(url).pathname;
     calls.push({ pathname, ...options, body: options.body && JSON.parse(options.body) });
@@ -28,8 +31,9 @@ function fixture({ userId = OWNER_ID, conflict = false, basePath = '' } = {}) {
     if (pathname.endsWith('/git/commits')) return json({ sha: 'new-commit' });
     if (pathname.endsWith('/git/refs/heads/main')) return conflict ? json({}, 422) : json({});
     throw new Error(`Unexpected GitHub call ${url}`);
-  });
-  return { calls, request: (path, options) => editor.fetch(new Request(origin + path, options), { ...env, EDITOR_PATH: basePath }),
+  }, { stateFile: path.join(directory, 'state.json'), secret: env.SESSION_SECRET, automatic: false });
+  t.after(async () => { await editor.close(); fs.rmSync(directory, { recursive: true, force: true }); });
+  return { calls, flush: editor.flush, setUser: id => { userId = id; }, request: (path, options) => editor.fetch(new Request(origin + path, options), { ...env, EDITOR_PATH: basePath }),
     writes: () => calls.filter(call => ['POST', 'PATCH'].includes(call.method) && call.pathname.startsWith('/repos/')) };
 }
 
@@ -38,8 +42,8 @@ async function sessionHeaders(extra = {}) {
   return { Cookie: `${SESSION_COOKIE}=${value}`, Origin: origin, 'X-Editor-Token': 'csrf-test', 'Content-Type': 'application/json', ...extra };
 }
 
-test('OAuth binds state and PKCE to the browser, then issues an encrypted owner-only cookie', async () => {
-  const app = fixture();
+test('OAuth binds state and PKCE to the browser, then issues an encrypted owner-only cookie', async t => {
+  const app = fixture(t);
   const login = await app.request('/auth/login');
   assert.equal(login.status, 303);
   const authorize = new URL(login.headers.get('Location'));
@@ -64,8 +68,8 @@ test('OAuth binds state and PKCE to the browser, then issues an encrypted owner-
   assert.equal(decoded.accessToken, 'test-access-token');
 });
 
-test('another GitHub account cannot obtain an editor session even with the owner login name', async () => {
-  const app = fixture({ userId: 123 });
+test('another GitHub account cannot obtain an editor session even with the owner login name', async t => {
+  const app = fixture(t, { userId: 123 });
   const login = await app.request('/auth/login');
   const state = new URL(login.headers.get('Location')).searchParams.get('state');
   const result = await app.request(`/auth/callback?code=code&state=${state}`, { headers: { Cookie: login.headers.get('Set-Cookie').split(';')[0] } });
@@ -74,8 +78,8 @@ test('another GitHub account cannot obtain an editor session even with the owner
   assert.equal(app.writes().length, 0);
 });
 
-test('anonymous, forged, expired and cross-site saves never write to GitHub', async () => {
-  const app = fixture();
+test('anonymous, forged, expired and cross-site saves never write to GitHub', async t => {
+  const app = fixture(t);
   const headers = await sessionHeaders();
   const expired = await seal({ userId: OWNER_ID, expires: Date.now() - 1 }, env.SESSION_SECRET, SESSION_COOKIE);
   const attempts = [
@@ -92,15 +96,24 @@ test('anonymous, forged, expired and cross-site saves never write to GitHub', as
   assert.equal(app.calls.length, 0);
 });
 
-test('each write rechecks numeric GitHub identity rather than trusting the session alone', async () => {
-  const app = fixture({ userId: 123 });
-  const result = await app.request('/__editor/content', { method: 'PUT', headers: await sessionHeaders(), body: '{}' });
-  assert.equal(result.status, 403);
-  assert.deepEqual(app.calls.map(call => call.pathname), ['/user']);
+test('background writes recheck numeric GitHub identity', async t => {
+  const app = fixture(t);
+  const headers = await sessionHeaders();
+  await app.request('/', { headers });
+  app.setUser(123);
+  const changed = structuredClone(content);
+  changed['hero-title'].zh = '草稿';
+  const result = await app.request('/__editor/content', { method: 'PUT', headers,
+    body: JSON.stringify({ revision: 'head-before', content: changed }) });
+  assert.equal(result.status, 202);
+  await app.flush();
+  const status = await (await app.request('/__editor/sync', { headers })).json();
+  assert.equal(status.state, 'blocked');
+  assert.equal(app.writes().length, 0);
 });
 
-test('owner preview renders current repository content without exposing the GitHub token', async () => {
-  const app = fixture();
+test('owner preview renders current repository content without exposing the GitHub token', async t => {
+  const app = fixture(t);
   const result = await app.request('/', { headers: await sessionHeaders() });
   const html = await result.text();
   assert.equal(result.status, 200);
@@ -113,9 +126,10 @@ test('owner preview renders current repository content without exposing the GitH
   assert(html.includes(content['hero-title'].zh));
 });
 
-test('invalid, excessive and stale content is rejected without repository writes', async () => {
-  const app = fixture();
+test('invalid, excessive and stale content is rejected without repository writes', async t => {
+  const app = fixture(t);
   const headers = await sessionHeaders();
+  await app.request('/', { headers });
   for (const [body, status] of [
     [JSON.stringify({ revision: 'stale', content }), 409],
     [JSON.stringify({ revision: 'head-before', content: {} }), 400],
@@ -127,16 +141,19 @@ test('invalid, excessive and stale content is rejected without repository writes
   assert.equal(app.writes().length, 0);
 });
 
-test('owner saves only content.json, keeps translations and modules, and advances main without force', async () => {
-  const app = fixture();
+test('owner saves only content.json, keeps translations and modules, and advances main without force', async t => {
+  const app = fixture(t);
+  await app.request('/', { headers: await sessionHeaders() });
   const changed = structuredClone(content);
   changed['hero-title'].zh = '新标题 <script>alert(1)</script>';
   changed._modules = [{ source: 'text-p-1', id: 'copy-online' }];
   changed['copy-online-text-0'] = { zh: '线上副本', en: 'Online copy' };
   const result = await app.request('/__editor/content', { method: 'PUT', headers: await sessionHeaders(),
     body: JSON.stringify({ revision: 'head-before', content: changed, path: 'not-allowed.txt' }) });
-  assert.equal(result.status, 200);
-  assert.equal((await result.json()).revision, 'new-commit');
+  assert.equal(result.status, 202);
+  assert.match((await result.json()).revision, /^save-/);
+  assert.equal(app.writes().length, 0);
+  await app.flush();
   const writes = app.writes();
   assert.equal(writes.length, 3);
   assert.deepEqual(writes[0].body.tree.map(file => file.path), ['content.json']);
@@ -146,16 +163,22 @@ test('owner saves only content.json, keeps translations and modules, and advance
   assert.deepEqual(writes[2].body, { sha: 'new-commit', force: false });
 });
 
-test('concurrent commits return a conflict rather than overwriting main', async () => {
-  const app = fixture({ conflict: true });
+test('concurrent commits block sync without overwriting main', async t => {
+  const app = fixture(t, { conflict: true });
+  const headers = await sessionHeaders();
+  await app.request('/', { headers });
+  const changed = structuredClone(content);
+  changed['hero-title'].zh = '冲突草稿';
   const result = await app.request('/__editor/content', { method: 'PUT', headers: await sessionHeaders(),
-    body: JSON.stringify({ revision: 'head-before', content }) });
-  assert.equal(result.status, 409);
+    body: JSON.stringify({ revision: 'head-before', content: changed }) });
+  assert.equal(result.status, 202);
+  await app.flush();
+  assert.equal((await (await app.request('/__editor/sync', { headers })).json()).state, 'blocked');
   assert.equal(app.writes().at(-1).body.force, false);
 });
 
-test('logout requires CSRF validation and clears the secure session cookie', async () => {
-  const app = fixture();
+test('logout requires CSRF validation and clears the secure session cookie', async t => {
+  const app = fixture(t);
   const result = await app.request('/auth/logout', { method: 'POST', headers: await sessionHeaders() });
   assert.equal(result.status, 200);
   assert(result.headers.get('Set-Cookie').includes('Max-Age=0'));
@@ -163,8 +186,8 @@ test('logout requires CSRF validation and clears the secure session cookie', asy
   assert.equal(app.calls.length, 0);
 });
 
-test('mounted editor keeps login, callback, scripts and save under /editor/', async () => {
-  const app = fixture({ basePath: '/editor' });
+test('mounted editor keeps login, callback, scripts and save under /editor/', async t => {
+  const app = fixture(t, { basePath: '/editor' });
   assert.equal((await app.request('/')).status, 404);
   assert.equal((await app.request('/editor/')).headers.get('Location'), '/editor/auth/login');
   const login = await app.request('/editor/auth/login');
@@ -182,5 +205,5 @@ test('mounted editor keeps login, callback, scripts and save under /editor/', as
   assert(html.includes('"basePath":"/editor"'));
   const save = await app.request('/editor/__editor/content', { method: 'PUT', headers: await sessionHeaders(),
     body: JSON.stringify({ revision: 'head-before', content }) });
-  assert.equal(save.status, 200);
+  assert.equal(save.status, 202);
 });

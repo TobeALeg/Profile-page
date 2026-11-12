@@ -8,7 +8,7 @@ const { content, template } = readContent(process.cwd());
 assert.equal(new Set(contentKeys(template)).size, contentKeys(template).length, 'Duplicate content keys');
 const html = renderPage(template, content);
 new vm.Script(fs.readFileSync('portfolio.js', 'utf8'));
-for (const file of ['local-editor.js', 'local-modules.mjs', 'module-copy.mjs']) execFileSync(process.execPath, ['--check', file]);
+for (const file of ['local-editor.js', 'local-modules.mjs', 'module-copy.mjs', 'editor-drafts.mjs']) execFileSync(process.execPath, ['--check', file]);
 for (const [,script] of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) new vm.Script(script);
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(new Set(ids).size, ids.length, 'Duplicate ids');

@@ -6,14 +6,20 @@ import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
 import { createEditor } from './app.mjs';
 import { EDITOR_ASSETS, MAX_BODY } from './config.mjs';
+import { createPublicSite } from './public-site.mjs';
 
 const assetRoot = fileURLToPath(new URL('./public/', import.meta.url));
 
-export function createNodeServer(env, handler = createEditor()) {
+export function createNodeServer(env, handler) {
   const origin = new URL(env.PUBLIC_ORIGIN);
   if (origin.protocol !== 'https:' || origin.href !== `${origin.origin}/`) throw new Error('PUBLIC_ORIGIN must be an HTTPS origin');
   const basePath = env.EDITOR_PATH || '';
   if (!/^(\/[a-zA-Z0-9_-]+)*$/.test(basePath)) throw new Error('Invalid EDITOR_PATH');
+  const site = createPublicSite(fileURLToPath(new URL('../', import.meta.url)), () => handler.current?.());
+  if (!handler) {
+    if (!env.DATA_DIR) throw new Error('DATA_DIR is required');
+    handler = createEditor(fetch, { stateFile: path.join(env.DATA_DIR, 'draft.json'), secret: env.SESSION_SECRET, template: site.template });
+  }
   const runtime = { ...env, ASSETS: {
     async fetch(request) {
       const name = new URL(request.url).pathname.slice(basePath.length + 1);
@@ -25,7 +31,7 @@ export function createNodeServer(env, handler = createEditor()) {
       } });
     },
   } };
-  return http.createServer({ requestTimeout: 30000, headersTimeout: 15000 }, async (incoming, outgoing) => {
+  const server = http.createServer({ requestTimeout: 30000, headersTimeout: 15000 }, async (incoming, outgoing) => {
     try {
       if (incoming.headers.host !== origin.host || !incoming.url.startsWith('/') || incoming.url.startsWith('//')) {
         outgoing.writeHead(403); outgoing.end('Invalid host'); return;
@@ -42,7 +48,8 @@ export function createNodeServer(env, handler = createEditor()) {
         method: incoming.method, headers,
         ...(!['GET', 'HEAD'].includes(incoming.method) ? { body: Readable.toWeb(incoming), duplex: 'half' } : {}),
       });
-      const response = await handler.fetch(request, runtime);
+      const response = basePath && !new URL(request.url).pathname.startsWith(`${basePath}/`)
+        ? await site.fetch(request) : await handler.fetch(request, runtime);
       outgoing.statusCode = response.status;
       for (const [name, value] of response.headers) if (name !== 'set-cookie') outgoing.setHeader(name, value);
       const cookies = response.headers.getSetCookie();
@@ -55,6 +62,8 @@ export function createNodeServer(env, handler = createEditor()) {
       outgoing.end(JSON.stringify({ error: '服务暂时不可用，请稍后重试。' }));
     }
   });
+  server.on('close', () => { Promise.resolve(handler.close?.()).catch(() => {}); });
+  return server;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

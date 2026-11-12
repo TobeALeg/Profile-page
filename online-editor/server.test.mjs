@@ -2,16 +2,23 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import http from 'node:http';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { createNodeServer } from './server.mjs';
 
 const env = { PUBLIC_ORIGIN: 'https://dandi.site', EDITOR_PATH: '/editor',
   GITHUB_CLIENT_ID: 'test-client', GITHUB_CLIENT_SECRET: 'test-secret', SESSION_SECRET: 'test-session-key-'.repeat(4) };
 
 async function start(t, handler) {
-  const server = createNodeServer(env, handler);
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'portfolio-server-'));
+  const server = createNodeServer({ ...env, DATA_DIR: directory }, handler);
   server.listen(0, '127.0.0.1');
   await once(server, 'listening');
-  t.after(() => new Promise(resolve => server.close(resolve)));
+  t.after(() => new Promise(resolve => server.close(() => {
+    fs.rmSync(directory, { recursive: true, force: true });
+    resolve();
+  })));
   return (path, { headers = {}, method = 'GET', body } = {}) => new Promise((resolve, reject) => {
     const request = http.request({ hostname: '127.0.0.1', port: server.address().port, path, method,
       headers: { Host: 'dandi.site', ...headers } }, response => {
@@ -54,11 +61,16 @@ test('mounted Node service exposes only editor assets and denies anonymous saves
   const asset = await request('/editor/local-editor.js');
   assert.equal(asset.status, 200);
   assert(asset.headers['content-type'].includes('javascript'));
-  assert(asset.text.includes('保存并发布'));
+  assert(asset.text.includes('已保存到服务器'));
   for (const path of ['/editor/.env', '/editor/../.env', '/editor/server.mjs']) {
     assert.notEqual((await request(path)).status, 200);
   }
   const save = await request('/editor/__editor/content', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: '{}' });
   assert.equal(save.status, 401);
-  assert.equal((await request('/')).status, 404);
+  const home = await request('/');
+  assert.equal(home.status, 200);
+  assert(home.text.includes('page-content'));
+  assert(!home.text.includes('editor-config'));
+  assert.equal((await request('/portfolio.css')).status, 200);
+  assert.equal((await request('/content.json')).status, 404);
 });

@@ -27,3 +27,9 @@
 }
 .editor-account { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
 .editor-account a { color: inherit; font-size: 12px; }
+.editor-account { flex-wrap: wrap; }
+.editor-sync { flex-basis: 100%; max-width: 520px; color: #aeb5c1; line-height: 1.5; }
+@media(max-width:640px) {
+  .local-editor { flex-wrap: wrap; }
+  .editor-account { width: 100%; }
+}

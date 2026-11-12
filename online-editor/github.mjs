@@ -8,6 +8,7 @@ export function createGitHub(fetcher = fetch) {
   async function api(path, token, method = 'GET', body) {
     const response = await fetcher(`https://api.github.com${path}`, {
       method,
+      signal: AbortSignal.timeout(10000),
       headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json',
         'User-Agent': 'dandi-profile-editor', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
       body: body ? JSON.stringify(body) : undefined,
@@ -24,7 +25,7 @@ export function createGitHub(fetcher = fetch) {
   return {
     async exchange(code, verifier, env, redirectUri) {
       const response = await fetcher('https://github.com/login/oauth/access_token', {
-        method: 'POST', headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        method: 'POST', signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET,
           code, code_verifier: verifier, redirect_uri: redirectUri }),
       });

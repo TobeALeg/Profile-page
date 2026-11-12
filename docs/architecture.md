@@ -5,11 +5,11 @@
 ### module relationship
 
 - index.html：页面结构模板，`data-copy` 标识可编辑文字。
-- content.json：中英文网页文案的唯一内容源，按稳定键保存。
+- content.json：中英文网页文案的仓库副本与首次部署内容，按稳定键保存；在线当前内容位于服务器持久数据卷。
 - portfolio.js：读取页面内嵌内容并切换语言。
 - scripts/content.mjs、scripts/render.mjs：文案结构校验、版本检查、原子保存与静态 HTML 渲染。
 - scripts/preview.mjs：仅监听 127.0.0.1 的预览服务，提供文案读取与保存接口。
-- local-editor.js、local-editor.css：仅本地注入的文字编辑、模块选择与保存工具，不进入静态构建。
+- local-editor.js、local-editor.css：本地与鉴权在线编辑页共用的编辑工具，不进入公开 HTML 或静态构建。
 - local-modules.mjs：浏览器模块选择、复制和编辑标记清理。
 - module-copy.mjs、scripts/modules.mjs：客户端与服务端共用标识重命名规则；服务端从模板重建副本。
 - system-tokens.css：现有设计令牌与组件样式。
@@ -97,3 +97,16 @@
 服务器部署在 `/opt/profile-editor`，仅此服务读取该目录下权限为 600 的 `.env`。GitHub App 配置与会话密钥不进入镜像或仓库。`configure-auth.py` 从标准输入接收客户端信息并重建独立容器。GitHub App 注册及服务器配置已完成，公开页脚链接到独立编辑服务。完整接入步骤与验收边界见 `online-editor/README.md`。
 
 2026-11-12 实际状态流已验证：本人登录 → 保存 `content.json` → 提交 `550c87e` → Pages 工作流 `43175598392` 成功 → 公开 HTML 与保存内容渲染结果一致。保存成功表示仓库写入完成；公开更新以部署完成为准，两者不混为同一个状态。
+
+
+## 2026-11-12：服务器为当前内容源，GitHub 异步同步
+
+`server.mjs` 按路径区分匿名公开页和鉴权编辑路由。`public-site.mjs` 使用部署模板与最新持久内容渲染主页，按修订号缓存 HTML，返回 no-store；图片和样式使用显式白名单。Nginx 根路径不再跳转 Pages，直接代理相同独立服务。原 Pages 工作流保留为备用站发布。
+
+保存流：输入 → `editor-drafts.mjs` 保存文字/模块操作到本机 localStorage → PUT 内容与当前修订号 → 会话/CSRF/内容/修订验证 → `draft-store.mjs` 同目录临时文件、文件 fsync、rename、目录 fsync → 返回 202 与新修订号。公开页立即使用该内容，保存请求不依赖 GitHub 请求。
+
+同步流：持久 pending → active → 验证 GitHub 账号 → 读取远端 → 内容与模板冲突检查 → 仅提交 content.json、非强推更新 → synced。单进程串行消费；未执行的 pending 合并为最新保存。active 成功只更新同步基线，不覆盖后来的内容或 pending。网络故障指数退避 2–60 秒；身份、权限或内容冲突进入 blocked，人工处理后重试；任务记录在重启后恢复，远端已有目标内容时视为丢失回应恢复。
+
+`ContentSync.open` 初始化后只读取服务器版本，GitHub 的外部修改不会静默覆盖服务器内容。部署时使用当前模板校验持久内容，键/模块不兼容必须先迁移。后台待同步令牌使用 SESSION_SECRET 认证加密并有有效期；数据放在命名卷 `/var/lib/profile-editor/draft.json`，不在镜像或 Git 中。只有一个 Node 实例拥有该文件，不支持多个副本并发写同一卷。
+
+状态流：本机未提交草稿 → 服务器已保存且公开可见 → GitHub 同步中/自动重试/需处理 → GitHub 已同步 → Pages 独立工作流更新。浏览器保存期间的新输入仍为脏状态；请求丢失时同一 requestId 可重试；刷新后按内容基线恢复草稿，从可信模板重建模块，不存储任意 HTML。不能合并的本机草稿单独保留，提供下载和明确清除操作。

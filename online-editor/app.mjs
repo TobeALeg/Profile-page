@@ -1,5 +1,6 @@
 import { renderPage } from '../scripts/render.mjs';
 import { createGitHub } from './github.mjs';
+import { ContentSync } from './content-sync.mjs';
 import { EDITOR_ASSETS, MAX_BODY, OWNER_ID, SITE_URL, failure } from './config.mjs';
 import { LOGIN_COOKIE, SESSION_COOKIE, challenge, cookie, randomToken, readCookie, seal, unseal } from './session.mjs';
 
@@ -42,9 +43,13 @@ function withPublicAssets(template) {
   });
 }
 
-export function createEditor(fetcher = fetch) {
+export function createEditor(fetcher = fetch, { stateFile, secret, template, automatic = true } = {}) {
   const github = createGitHub(fetcher);
+  const sync = new ContentSync({ filename: stateFile, github, secret, template, automatic });
   return {
+    current: () => sync.store.value ? sync.snapshot() : null,
+    close: () => sync.close(),
+    flush: () => sync.flush(),
     async fetch(request, env) {
       try {
         const url = new URL(request.url);
@@ -95,21 +100,20 @@ export function createEditor(fetcher = fetch) {
           return respond({ url: SITE_URL }, 200, 'application/json', { 'Set-Cookie': cookie(SESSION_COOKIE, '', 0) });
         }
         if (pathname === '/' && request.method === 'GET') {
-          await github.owner(session.accessToken);
-          const current = await github.read(session.accessToken);
+          const current = await sync.open(session.accessToken);
           const html = renderPage(withPublicAssets(current.template), current.content, {
-            token: session.csrf, revision: current.revision, online: true, siteUrl: SITE_URL, basePath,
+            token: session.csrf, revision: current.revision, sync: current.sync,
+            online: true, siteUrl: SITE_URL, basePath,
           });
           return respond(html, 200, 'text/html');
         }
         if (pathname === '/__editor/content' && request.method === 'PUT') {
-          await github.owner(session.accessToken);
           const input = await readInput(request);
-          const current = await github.read(session.accessToken);
-          if (!input || input.revision !== current.revision) throw failure(409, '仓库已有新修改，请保留当前文字后重新打开编辑页。');
-          try { renderPage(current.template, input.content); }
-          catch (error) { throw failure(400, error.message); }
-          return respond(await github.save(session.accessToken, current, input.content));
+          return respond(await sync.accept(input, session), 202);
+        }
+        if (pathname === '/__editor/sync' && request.method === 'GET') return respond(sync.status());
+        if (pathname === '/__editor/sync' && request.method === 'POST') {
+          return respond(await sync.retry(session));
         }
         return respond({ error: '未找到页面。' }, 404);
       } catch (error) {
@@ -118,5 +122,3 @@ export function createEditor(fetcher = fetch) {
     },
   };
 }
-
-export default createEditor();
