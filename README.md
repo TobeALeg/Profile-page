@@ -10,20 +10,32 @@
 
 案例依据 [内容索引](docs/experiments/README.md)；截图标明版本、重截和演示数据范围。LLM Wiki 的代码日期不作为个人探索起点。未整理的过程和业务成果不补猜。
 
-## 本地预览
+## 本地编辑
+
+使用 Node.js 24，首次运行先安装构建依赖：
 
 ```sh
+npm ci
 npm run preview
 ```
 
-打开 http://127.0.0.1:4173 。也可直接打开 `index.html`。双语切换会保留语言选择。
+打开 http://127.0.0.1:4173 ，点击“编辑页面”修改中英文文字或复制模块。“保存”写入 `content.json`，不会自动发布。双语切换会保留语言选择。不要直接打开模板 `index.html`，正文需要由内容源渲染。
+
+## GitHub Pages
+
+公开地址：https://tobealeg.github.io/Profile-page/
+
+`.github/workflows/pages.yml` 在 `main` 更新后自动检查、测试、构建并发布 `dist/`。仓库 Settings → Pages 的 Source 设为 GitHub Actions。也可在 Actions 中手动运行部署。
+
+公开构建只包含访客页面、样式、语言切换脚本及图片，不包含本地编辑脚本、保存接口或源文档。本机保存的内容需提交并推送至 `main` 才会更新网站。发布进度见仓库 Actions。
 
 ## 构建与检查
 
-需 Node.js 和 Python 3；无需安装 npm 依赖。
+构建依赖通过 `npm ci` 安装；访客浏览无需任何运行时依赖。
 
 ```sh
 npm run check
+npm test
 npm run build
 ```
 
@@ -31,11 +43,12 @@ npm run build
 
 ## 文件
 
-- `index.html`：双语内容、语义 HTML、语言切换。
+- `index.html`：带稳定文字键与模块标记的 HTML 模板。
+- `content.json`：手动保存的中英文内容与模块复制记录。
 - `system-tokens.css`：既有设计令牌。
 - `portfolio.css`：响应式页面布局、交互与减少动态效果支持。
-- `scripts/`：零依赖构建和静态检查。
+- `scripts/`：内容渲染、本机预览、构建与检查。
 - `docs/`：产品、架构和案例证据。
 - `output/playwright/portfolio/`：桌面与手机验证截图。
 
-当前只完成网页实现与本地预览，未部署、推送或变更共享权限。
+GitHub Pages 部署仅上传 `dist/`，不会将整个仓库作为网站目录。
