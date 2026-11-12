@@ -17,6 +17,8 @@ let pendingRequest = null;
 let backupAvailable = false;
 let syncTimer;
 let recoveryDraft = null;
+let notice = '';
+let syncNotice = '';
 let storage;
 try { storage = localStorage; } catch {}
 const drafts = config.online ? createDraftBackup(storage, 'portfolio-editor-draft-v1') : null;
@@ -29,19 +31,46 @@ const retainDraft = () => {
 const toolbar = document.createElement('aside');
 toolbar.className = 'local-editor';
 toolbar.setAttribute('aria-label', config.online ? '本人页面编辑' : '本地页面编辑');
-toolbar.innerHTML = `<button type="button" data-action="edit">编辑页面</button>
+toolbar.innerHTML = `<div class="editor-bar">
+  <div class="editor-heading">
+    <span class="editor-brand">页面编辑</span>
+    <select class="editor-language" data-action="language" aria-label="编辑语言">
+      <option value="zh">中文</option><option value="en">English</option>
+    </select>
+  </div>
   <div class="editor-controls" hidden>
-    <div class="editor-info"><strong class="editor-language"></strong><span role="status" aria-live="polite"></span></div>
+    <button type="button" data-action="mode" aria-pressed="false">选择模块</button>
+    <span class="editor-status" role="status" aria-live="polite"></span>
     <div class="editor-actions">
-      <button type="button" data-action="mode">选择模块</button>
-      <button type="button" data-action="parent" hidden>选外层</button>
-      <button type="button" data-action="copy" hidden>复制模块</button>
-      <button type="button" data-action="discard">撤销修改</button>
-      <button type="button" data-action="save" class="editor-primary">保存</button>
       <button type="button" data-action="finish">完成</button>
+      <button type="button" data-action="save" class="editor-primary">保存</button>
     </div>
-  </div>`;
-document.body.append(toolbar);
+  </div>
+  <button type="button" data-action="edit" class="editor-primary">编辑页面</button>
+  <details class="editor-menu">
+    <summary aria-label="更多编辑操作">更多</summary>
+    <div class="editor-menu-panel">
+      <button type="button" data-action="discard">撤销未保存修改</button>
+    </div>
+  </details>
+</div>
+<div class="editor-context" hidden>
+  <span class="editor-selection"></span>
+  <button type="button" data-action="parent" hidden>选择外层</button>
+  <button type="button" data-action="copy">复制模块</button>
+</div>
+<div class="editor-alert" hidden>
+  <span class="editor-feedback" role="alert"></span>
+</div>`;
+document.body.prepend(toolbar);
+document.body.classList.add('has-editor');
+new ResizeObserver(() => {
+  document.documentElement.style.setProperty('--editor-toolbar-height', `${toolbar.offsetHeight}px`);
+}).observe(toolbar);
+const menu = toolbar.querySelector('.editor-menu');
+document.addEventListener('click', event => {
+  if (!menu.contains(event.target)) menu.open = false;
+});
 if (config.online) {
   const account = document.createElement('div');
   account.className = 'editor-account';
@@ -60,11 +89,10 @@ if (config.online) {
       if (!response.ok) throw new Error('退出失败，请重试。');
       saved = structuredClone(page.content);
       location.assign(config.siteUrl);
-    } catch { update('退出失败，请重试。'); }
+    } catch { update('退出失败，请重试。', true); }
   };
   const syncLabel = document.createElement('span');
   syncLabel.className = 'editor-sync';
-  syncLabel.setAttribute('role', 'status');
   const retry = document.createElement('button');
   retry.type = 'button';
   retry.dataset.action = 'retry-sync';
@@ -72,6 +100,7 @@ if (config.online) {
   retry.hidden = true;
   retry.onclick = async () => {
     retry.disabled = true;
+    syncNotice = '';
     try {
       const response = await fetch(`${editorPath}/__editor/sync`, { method: 'POST', headers: { 'X-Editor-Token': config.token } });
       const result = await response.json();
@@ -79,7 +108,7 @@ if (config.online) {
       syncState = result;
       updateSync();
       pollSync();
-    } catch (error) { syncLabel.textContent = error.message; }
+    } catch (error) { syncNotice = error.message; updateSync(); }
     finally { retry.disabled = false; }
   };
   const download = document.createElement('button');
@@ -107,42 +136,55 @@ if (config.online) {
     updateSync();
     update();
   };
-  account.append(syncLabel, retry, download, dismissDraft, back, logout);
-  toolbar.append(account);
-  toolbar.querySelector('[data-action="save"]').textContent = '保存';
+  account.append(back, logout, syncLabel);
+  toolbar.querySelector('.editor-menu-panel').append(account);
+  toolbar.querySelector('.editor-alert').append(retry, download, dismissDraft);
 }
 const button = action => toolbar.querySelector(`[data-action="${action}"]`);
-const status = toolbar.querySelector('[role="status"]');
+const status = toolbar.querySelector('.editor-status');
 const dirty = () => JSON.stringify(page.content) !== JSON.stringify(saved);
 const modules = createModuleEditor(root, () => page.content, () => update());
 
-function update(message) {
+function update(message, isError = false) {
+  if (message !== undefined) notice = isError ? message : '';
   const changed = dirty();
-  toolbar.querySelector('.editor-language').textContent = selecting ? '选择模块'
-    : page.language === 'zh' ? '编辑中文' : 'Editing English';
-  status.textContent = message || (selecting
-    ? modules.selected ? `已选：${modules.label}` : '点击要复制的内容块'
-    : saving ? '正在保存到服务器…'
-    : changed ? backupAvailable ? '草稿已保留在本机，尚未保存到服务器' : '有未保存的修改'
-    : '点击文字直接修改');
-  button('mode').textContent = selecting ? '改文字' : '选择模块';
+  toolbar.querySelector('.editor-language').value = page.language;
+  status.textContent = (!isError && message) || (saving ? '保存中…'
+    : changed ? '未保存' : config.online && syncState.state === 'syncing' ? '已保存 · 同步中'
+    : config.online && syncState.state === 'retrying' ? '已保存 · 同步重试中'
+    : config.online ? '已保存' : '已保存到本地');
+  status.title = changed && backupAvailable ? '草稿已保留在本机，尚未保存到服务器' : status.textContent;
+  status.dataset.state = changed ? 'dirty' : saving ? 'saving' : 'saved';
+  toolbar.querySelector('.editor-context').hidden = !editing || !selecting;
+  toolbar.querySelector('.editor-selection').textContent = modules.selected ? modules.label : '点击要复制的模块';
+  button('mode').textContent = selecting ? '返回文字编辑' : '选择模块';
+  button('mode').setAttribute('aria-pressed', String(selecting));
   button('mode').disabled = saving || composing;
+  button('language').disabled = composing;
   button('parent').hidden = !selecting || !modules.parent;
   button('parent').disabled = saving;
-  button('copy').hidden = !selecting;
   button('copy').disabled = !modules.selected || saving;
+  button('save').textContent = saving ? '保存中…' : '保存';
   button('save').disabled = !changed || saving || composing;
   button('discard').disabled = !changed || saving;
   button('finish').disabled = saving || composing;
+  updateAlert();
+}
+
+function updateAlert() {
+  const text = recoveryDraft ? '有旧版本的本机草稿，请先下载保留，再清除旧草稿。'
+    : notice || syncNotice || (['blocked', 'retrying'].includes(syncState.state) ? syncState.message : '');
+  toolbar.querySelector('.editor-feedback').textContent = text;
+  toolbar.querySelector('.editor-alert').hidden = !text;
 }
 
 function updateSync() {
   if (!config.online) return;
-  toolbar.querySelector('.editor-sync').textContent = recoveryDraft
-    ? '本机有旧版本草稿，请先下载保留，再编辑当前版本。' : syncState.message;
+  toolbar.querySelector('.editor-sync').textContent = syncState.state === 'synced' ? 'GitHub 已同步' : syncState.message;
   button('retry-sync').hidden = !['blocked', 'retrying'].includes(syncState.state);
   button('download-draft').hidden = !recoveryDraft;
   button('dismiss-draft').hidden = !recoveryDraft;
+  update();
 }
 
 async function pollSync() {
@@ -151,15 +193,18 @@ async function pollSync() {
     const response = await fetch(`${editorPath}/__editor/sync`, { cache: 'no-store', signal: AbortSignal.timeout(8000) });
     const result = await response.json();
     if (response.status === 401) {
-      toolbar.querySelector('.editor-sync').textContent = '登录已过期，请刷新页面重新登录。本机草稿会保留。';
+      syncNotice = '登录已过期，请刷新页面重新登录。本机草稿会保留。';
+      updateAlert();
       return;
     }
     if (!response.ok) throw new Error(result.error);
     syncState = result;
+    syncNotice = '';
     updateSync();
     if (['syncing', 'retrying'].includes(result.state)) syncTimer = setTimeout(pollSync, 2000);
   } catch {
-    toolbar.querySelector('.editor-sync').textContent = '暂时无法查询同步状态，已保存的内容仍在服务器。';
+    syncNotice = '暂时无法查询同步状态，已保存的内容仍在服务器。';
+    updateAlert();
     syncTimer = setTimeout(pollSync, 5000);
   }
 }
@@ -183,6 +228,7 @@ function configureFields() {
 function setEditing(active) {
   editing = active;
   selecting = false;
+  menu.open = false;
   document.body.classList.toggle('is-editing', active);
   button('edit').hidden = active;
   toolbar.querySelector('.editor-controls').hidden = !active;
@@ -230,7 +276,7 @@ async function save() {
   if (!pendingRequest || pendingRequest.content !== requestContent || pendingRequest.revision !== revision) {
     pendingRequest = { content: requestContent, revision, id: crypto.randomUUID() };
   }
-  update('正在保存…');
+  update('保存中…');
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   let message;
@@ -253,8 +299,7 @@ async function save() {
     }
     retainDraft();
     success = true;
-    message = dirty() ? '已保存；还有新修改未保存'
-      : config.online ? '已保存到服务器，可以继续编辑' : '已保存到本地';
+    message = dirty() ? '还有新修改未保存' : config.online ? '已保存' : '已保存到本地';
   } catch (error) {
     retainDraft();
     message = error.name === 'AbortError' || error instanceof TypeError
@@ -263,11 +308,12 @@ async function save() {
   } finally {
     clearTimeout(timeout);
     saving = false;
-    update(message);
+    update(message, !success);
   }
   return success;
 }
 
+button('language').onchange = event => window.setLang(event.target.value);
 button('edit').onclick = () => setEditing(true);
 button('mode').onclick = () => { selecting = !selecting; configureFields(); update(); };
 button('parent').onclick = () => modules.selectParent();
@@ -279,22 +325,27 @@ button('copy').onclick = () => {
     configureFields();
     retainDraft();
     clone.scrollIntoView({ block: 'center', behavior: 'instant' });
-    update('已复制，可直接修改副本；保存后保留');
-  } catch (error) { update(error.message); }
+    update('已复制 · 未保存');
+  } catch (error) { update(error.message, true); }
 };
 button('save').onclick = save;
 button('discard').onclick = () => {
+  menu.open = false;
   page.replaceContent(structuredClone(saved), savedLayout);
   retainDraft();
   modules.clear();
   selecting = false;
   configureFields();
-  update('已撤销未保存的修改');
+  update('已撤销修改');
 };
 button('finish').onclick = async () => {
   if (await save() && !dirty()) { setEditing(false); button('edit').focus(); }
 };
 document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') {
+    if (menu.open) { menu.open = false; menu.querySelector('summary').focus(); }
+    else if (selecting) { selecting = false; configureFields(); update(); button('mode').focus(); }
+  }
   if (editing && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
     event.preventDefault();
     if (!event.isComposing) save();
@@ -316,3 +367,5 @@ if (config.online) {
   updateSync();
   pollSync();
 }
+
+if (!config.online) update();
