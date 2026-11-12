@@ -86,7 +86,7 @@
 
 用户已选择线上登录编辑。下一步需将身份验证与内容写回仓库放在后端，并在服务端限制为本人 GitHub 身份；静态页面隐藏按钮不能替代写入权限验证。此阶段部署流程不包含在线身份服务。
 
-## 待接入的在线编辑服务
+## 在线编辑服务
 
 `online-editor/app.mjs` 处理登录回调、本人编辑页和保存路由；`session.mjs` 管理带认证加密的安全会话 Cookie；`github.mjs` 集中访问固定仓库。权限以数字用户 ID 验证，每次写入再次查询 GitHub 身份。保存创建以已读提交为父的新提交，再以非强制方式更新 `main`，并发更新返回冲突。
 
@@ -94,4 +94,4 @@
 
 本人已确定使用现有服务器，候选 Cloudflare 配置已移除。`server.mjs` 提供 Node.js HTTP 适配并固定公共 Origin，`compose.yml` 将容器映射到回环端口 18789，Nginx 将 `dandi.site/editor/` 代理到该端口。根路径跳转 Pages。会话 Cookie 仅适用于 `dandi.site`，公开访客不触发登录。
 
-服务器部署在 `/opt/profile-editor`，仅此服务读取该目录下权限为 600 的 `.env`。GitHub App 配置与会话密钥不进入镜像或仓库。`configure-auth.py` 从标准输入接收客户端信息并重建独立容器；正式入口需在登录配置完成后开放。完整接入步骤与验收边界见 `online-editor/README.md`。
+服务器部署在 `/opt/profile-editor`，仅此服务读取该目录下权限为 600 的 `.env`。GitHub App 配置与会话密钥不进入镜像或仓库。`configure-auth.py` 从标准输入接收客户端信息并重建独立容器。GitHub App 注册及服务器配置已完成，公开页脚链接到独立编辑服务。完整接入步骤与验收边界见 `online-editor/README.md`。
