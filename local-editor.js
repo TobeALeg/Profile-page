@@ -12,7 +12,7 @@ let saving = false;
 let composing = false;
 const toolbar = document.createElement('aside');
 toolbar.className = 'local-editor';
-toolbar.setAttribute('aria-label', '本地页面编辑');
+toolbar.setAttribute('aria-label', config.online ? '本人页面编辑' : '本地页面编辑');
 toolbar.innerHTML = `<button type="button" data-action="edit">编辑页面</button>
   <div class="editor-controls" hidden>
     <div class="editor-info"><strong class="editor-language"></strong><span role="status" aria-live="polite"></span></div>
@@ -26,6 +26,30 @@ toolbar.innerHTML = `<button type="button" data-action="edit">编辑页面</butt
     </div>
   </div>`;
 document.body.append(toolbar);
+if (config.online) {
+  const account = document.createElement('div');
+  account.className = 'editor-account';
+  const back = document.createElement('a');
+  back.href = config.siteUrl;
+  back.target = '_blank';
+  back.rel = 'noopener noreferrer';
+  back.textContent = '查看公开网站';
+  const logout = document.createElement('button');
+  logout.type = 'button';
+  logout.textContent = '退出登录';
+  logout.onclick = async () => {
+    if (saving || (dirty() && !window.confirm('有未保存的修改，仍要退出吗？'))) return;
+    try {
+      const response = await fetch('/auth/logout', { method: 'POST', headers: { 'X-Editor-Token': config.token } });
+      if (!response.ok) throw new Error('退出失败，请重试。');
+      saved = structuredClone(page.content);
+      location.assign(config.siteUrl);
+    } catch { update('退出失败，请重试。'); }
+  };
+  account.append(back, logout);
+  toolbar.append(account);
+  toolbar.querySelector('[data-action="save"]').textContent = '保存并发布';
+}
 const button = action => toolbar.querySelector(`[data-action="${action}"]`);
 const status = toolbar.querySelector('[role="status"]');
 const dirty = () => JSON.stringify(page.content) !== JSON.stringify(saved);
@@ -124,10 +148,12 @@ async function save() {
     saved = snapshot;
     savedLayout = layout.innerHTML;
     success = true;
-    message = dirty() ? '已保存；还有新修改未保存' : '已保存到本地';
+    message = dirty() ? '已保存；还有新修改未保存'
+      : config.online ? '已保存，网站稍后更新' : '已保存到本地';
   } catch (error) {
     message = error.name === 'AbortError' || error instanceof TypeError
-      ? '暂时无法保存。修改仍在页面中，请确认本地服务运行后重试。' : error.message;
+      ? config.online ? '暂时无法确认保存结果。修改仍在页面中，请稍后重试。'
+        : '暂时无法保存。修改仍在页面中，请确认本地服务运行后重试。' : error.message;
   } finally {
     clearTimeout(timeout);
     saving = false;
@@ -166,3 +192,4 @@ document.addEventListener('keydown', event => {
     if (!event.isComposing) save();
   }
 });
+if (config.online) setEditing(true);

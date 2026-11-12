@@ -1,4 +1,4 @@
-import { contentKeys, validateContent } from './content.mjs';
+import { contentKeys, validateContent } from './content-model.mjs';
 import { expandModules } from './modules.mjs';
 
 const escapeText = text => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');

@@ -85,3 +85,11 @@
 静态文件采用相对地址，支持 `/Profile-page/` 项目路径；编辑服务、源文档、Git 元数据及 npm 依赖均不进入发布包。保存本地文件与线上发布是两个状态，推送后以 GitHub Actions 的部署结果判断是否公开更新。
 
 用户已选择线上登录编辑。下一步需将身份验证与内容写回仓库放在后端，并在服务端限制为本人 GitHub 身份；静态页面隐藏按钮不能替代写入权限验证。此阶段部署流程不包含在线身份服务。
+
+## 待接入的在线编辑服务
+
+`online-editor/worker.mjs` 处理登录回调、本人编辑页和保存路由；`session.mjs` 管理带认证加密的安全会话 Cookie；`github.mjs` 集中访问固定仓库。权限以数字用户 ID 验证，每次写入再次查询 GitHub 身份。保存创建以已读提交为父的新提交，再以非强制方式更新 `main`，并发更新返回冲突。
+
+`scripts/content-model.mjs` 抽出不依赖文件系统的文字校验，供本地和在线渲染共用。现有编辑脚本通过注入的 `online` 配置区分文案和退出操作，默认本地行为保持不变。`scripts/build-editor.mjs` 单独复制编辑资源，不改变公开 Pages 构建的资源白名单。
+
+候选 Cloudflare 配置位于 `online-editor/wrangler.jsonc`，尚未部署；实际身份服务需配置 GitHub App 客户端信息与会话密钥。完整接入步骤和未验证项见 `online-editor/README.md`。公开入口暂不启用，托管方式等待用户选择。

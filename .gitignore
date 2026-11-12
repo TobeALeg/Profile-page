@@ -1,3 +1,7 @@
 node_modules/
 .playwright-cli/
 dist/
+online-editor/public/
+.wrangler/
+.dev.vars*
+.env*

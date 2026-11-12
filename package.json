@@ -5,8 +5,9 @@
  "type": "module",
  "scripts": {
   "build": "node scripts/build.mjs",
+  "build:editor": "node scripts/build-editor.mjs",
   "check": "node scripts/check.mjs",
-  "test": "node --test scripts/editor.test.mjs",
+  "test": "node --test scripts/editor.test.mjs online-editor/*.test.mjs",
   "preview": "node scripts/preview.mjs"
  },
  "dependencies": {

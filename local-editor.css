@@ -25,3 +25,5 @@
   .editor-controls button { flex:1; }
   .is-editing { padding-bottom:180px!important; }
 }
+.editor-account { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.editor-account a { color: inherit; font-size: 12px; }
