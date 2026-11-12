@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createEditor } from './worker.mjs';
+import { createEditor } from './app.mjs';
 import { OWNER_ID, SITE_URL } from './config.mjs';
 import { SESSION_COOKIE, LOGIN_COOKIE, seal, unseal } from './session.mjs';
 
@@ -12,7 +12,7 @@ const content = JSON.parse(fs.readFileSync('content.json', 'utf8'));
 const encoded = value => Buffer.from(value).toString('base64');
 const json = (value, status = 200) => new Response(JSON.stringify(value), { status });
 
-function fixture({ userId = OWNER_ID, conflict = false } = {}) {
+function fixture({ userId = OWNER_ID, conflict = false, basePath = '' } = {}) {
   const calls = [];
   const editor = createEditor(async (url, options = {}) => {
     const pathname = new URL(url).pathname;
@@ -29,7 +29,7 @@ function fixture({ userId = OWNER_ID, conflict = false } = {}) {
     if (pathname.endsWith('/git/refs/heads/main')) return conflict ? json({}, 422) : json({});
     throw new Error(`Unexpected GitHub call ${url}`);
   });
-  return { calls, request: (path, options) => editor.fetch(new Request(origin + path, options), env),
+  return { calls, request: (path, options) => editor.fetch(new Request(origin + path, options), { ...env, EDITOR_PATH: basePath }),
     writes: () => calls.filter(call => ['POST', 'PATCH'].includes(call.method) && call.pathname.startsWith('/repos/')) };
 }
 
@@ -161,4 +161,26 @@ test('logout requires CSRF validation and clears the secure session cookie', asy
   assert(result.headers.get('Set-Cookie').includes('Max-Age=0'));
   assert.equal((await result.json()).url, SITE_URL);
   assert.equal(app.calls.length, 0);
+});
+
+test('mounted editor keeps login, callback, scripts and save under /editor/', async () => {
+  const app = fixture({ basePath: '/editor' });
+  assert.equal((await app.request('/')).status, 404);
+  assert.equal((await app.request('/editor/')).headers.get('Location'), '/editor/auth/login');
+  const login = await app.request('/editor/auth/login');
+  const authorize = new URL(login.headers.get('Location'));
+  assert.equal(authorize.searchParams.get('redirect_uri'), `${origin}/editor/auth/callback`);
+  const state = authorize.searchParams.get('state');
+  const callback = await app.request(`/editor/auth/callback?code=code&state=${state}`, {
+    headers: { Cookie: login.headers.get('Set-Cookie').split(';')[0] },
+  });
+  assert.equal(callback.headers.get('Location'), '/editor/');
+  assert.equal(app.calls[0].body.redirect_uri, `${origin}/editor/auth/callback`);
+  const html = await (await app.request('/editor/', { headers: await sessionHeaders() })).text();
+  assert(html.includes('src="/editor/local-editor.js'));
+  assert(html.includes('href="/editor/local-editor.css'));
+  assert(html.includes('"basePath":"/editor"'));
+  const save = await app.request('/editor/__editor/content', { method: 'PUT', headers: await sessionHeaders(),
+    body: JSON.stringify({ revision: 'head-before', content }) });
+  assert.equal(save.status, 200);
 });

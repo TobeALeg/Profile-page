@@ -12,8 +12,10 @@ export function renderPage(template, content, editor = null) {
   html = html.replace('<!-- PAGE_CONTENT -->',
     `<script id="page-content" type="application/json">${jsonForHtml(content)}</script>`);
   if (editor) {
-    html = html.replace('</head>', '<link rel="stylesheet" href="/local-editor.css">\n</head>');
-    html = html.replace('</body>', `<script id="editor-config" type="application/json">${jsonForHtml(editor)}</script>\n<script src="/local-editor.js?v=modules" type="module"></script>\n</body>`);
+    const basePath = editor.basePath || '';
+    if (!/^(\/[a-zA-Z0-9_-]+)*$/.test(basePath)) throw new Error('编辑路径无效。');
+    html = html.replace('</head>', `<link rel="stylesheet" href="${basePath}/local-editor.css">\n</head>`);
+    html = html.replace('</body>', `<script id="editor-config" type="application/json">${jsonForHtml(editor)}</script>\n<script src="${basePath}/local-editor.js?v=modules" type="module"></script>\n</body>`);
   }
   return html;
 }

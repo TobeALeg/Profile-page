@@ -1,6 +1,7 @@
 import { createModuleEditor, cleanEditorMarkup } from './local-modules.mjs';
 
 const config = JSON.parse(document.getElementById('editor-config').textContent);
+const editorPath = config.basePath || '';
 const page = window.portfolio;
 const root = document.querySelector('[data-editor-root]');
 let saved = structuredClone(page.content);
@@ -40,7 +41,7 @@ if (config.online) {
   logout.onclick = async () => {
     if (saving || (dirty() && !window.confirm('有未保存的修改，仍要退出吗？'))) return;
     try {
-      const response = await fetch('/auth/logout', { method: 'POST', headers: { 'X-Editor-Token': config.token } });
+      const response = await fetch(`${editorPath}/auth/logout`, { method: 'POST', headers: { 'X-Editor-Token': config.token } });
       if (!response.ok) throw new Error('退出失败，请重试。');
       saved = structuredClone(page.content);
       location.assign(config.siteUrl);
@@ -138,7 +139,7 @@ async function save() {
   let message;
   let success = false;
   try {
-    const response = await fetch('/__editor/content', {
+    const response = await fetch(`${editorPath}/__editor/content`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Editor-Token': config.token },
       body: JSON.stringify({ revision, content: snapshot }), signal: controller.signal,
     });

@@ -88,8 +88,10 @@
 
 ## 待接入的在线编辑服务
 
-`online-editor/worker.mjs` 处理登录回调、本人编辑页和保存路由；`session.mjs` 管理带认证加密的安全会话 Cookie；`github.mjs` 集中访问固定仓库。权限以数字用户 ID 验证，每次写入再次查询 GitHub 身份。保存创建以已读提交为父的新提交，再以非强制方式更新 `main`，并发更新返回冲突。
+`online-editor/app.mjs` 处理登录回调、本人编辑页和保存路由；`session.mjs` 管理带认证加密的安全会话 Cookie；`github.mjs` 集中访问固定仓库。权限以数字用户 ID 验证，每次写入再次查询 GitHub 身份。保存创建以已读提交为父的新提交，再以非强制方式更新 `main`，并发更新返回冲突。
 
 `scripts/content-model.mjs` 抽出不依赖文件系统的文字校验，供本地和在线渲染共用。现有编辑脚本通过注入的 `online` 配置区分文案和退出操作，默认本地行为保持不变。`scripts/build-editor.mjs` 单独复制编辑资源，不改变公开 Pages 构建的资源白名单。
 
-候选 Cloudflare 配置位于 `online-editor/wrangler.jsonc`，尚未部署；实际身份服务需配置 GitHub App 客户端信息与会话密钥。完整接入步骤和未验证项见 `online-editor/README.md`。公开入口暂不启用，托管方式等待用户选择。
+本人已确定使用现有服务器，候选 Cloudflare 配置已移除。`server.mjs` 提供 Node.js HTTP 适配并固定公共 Origin，`compose.yml` 将容器映射到回环端口 18789，Nginx 将 `dandi.site/editor/` 代理到该端口。根路径跳转 Pages。会话 Cookie 仅适用于 `dandi.site`，公开访客不触发登录。
+
+服务器部署在 `/opt/profile-editor`，仅此服务读取该目录下权限为 600 的 `.env`。GitHub App 配置与会话密钥不进入镜像或仓库。`configure-auth.py` 从标准输入接收客户端信息并重建独立容器；正式入口需在登录配置完成后开放。完整接入步骤与验收边界见 `online-editor/README.md`。
