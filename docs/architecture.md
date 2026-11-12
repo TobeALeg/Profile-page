@@ -95,3 +95,5 @@
 本人已确定使用现有服务器，候选 Cloudflare 配置已移除。`server.mjs` 提供 Node.js HTTP 适配并固定公共 Origin，`compose.yml` 将容器映射到回环端口 18789，Nginx 将 `dandi.site/editor/` 代理到该端口。根路径跳转 Pages。会话 Cookie 仅适用于 `dandi.site`，公开访客不触发登录。
 
 服务器部署在 `/opt/profile-editor`，仅此服务读取该目录下权限为 600 的 `.env`。GitHub App 配置与会话密钥不进入镜像或仓库。`configure-auth.py` 从标准输入接收客户端信息并重建独立容器。GitHub App 注册及服务器配置已完成，公开页脚链接到独立编辑服务。完整接入步骤与验收边界见 `online-editor/README.md`。
+
+2026-11-12 实际状态流已验证：本人登录 → 保存 `content.json` → 提交 `550c87e` → Pages 工作流 `43175598392` 成功 → 公开 HTML 与保存内容渲染结果一致。保存成功表示仓库写入完成；公开更新以部署完成为准，两者不混为同一个状态。
